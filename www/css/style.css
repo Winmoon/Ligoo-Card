@@ -1,0 +1,85 @@
+#page {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+}
+
+.content {
+	background: url("../imgs/bg.png") no-repeat scroll center center transparent;
+	height: 100%;
+	width: 100%;
+	background-size: cover;
+	-webkit-background-size: cover;
+}
+
+.logo {
+	height: 136px;
+	margin: 0 auto;
+	width: 182px;
+}
+
+.logo img {
+	max-width: 100%;
+}
+
+.btn-facebook {
+	background: url("../imgs/login_fb.png") no-repeat scroll 0 0 transparent;
+	height: 27px;
+	margin: 0 auto;
+	width: 211px;
+}
+
+.btn-facebook:before {
+	color: gray;
+	content: "Não postaremos nada que você não queira";
+	font-size: 11px;
+	position: relative;
+	top: 48px;
+}
+
+.login-separator {
+	border: none;
+	border-top: 1px solid rgb(216,219,226);
+	border-bottom: 1px solid white;
+	width: 90%;
+	position: relative;
+	top: 50px;
+}
+
+.login-separator:before {
+	background: none repeat scroll 0 0 #F1F2F6;
+	content: "OU";
+	font-size: 10px;
+	left: 50%;
+	margin-left: -10px;
+	padding-left: 5px;
+	padding-right: 5px;
+	position: relative;
+	top: -10px;
+}
+
+.login-extra-buttons {
+	position: relative;
+	text-align: center;
+	top: 68px;
+}
+
+.btn-acesse-sua-conta {
+	left: 4px;
+	position: relative;
+}
+
+.terms {
+	bottom: 9px;
+	color: #C0C2C7;
+	font-size: 11px;
+	position: absolute;
+	width: 85%;
+	padding: 10px;
+}
+
+.terms .blue {
+	color: rgb(51, 204, 204);
+}
