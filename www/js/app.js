@@ -31,6 +31,18 @@ function prompt(message, cb, title, buttons, defaultTxt) {
 	navigator.notification.prompt(message || "No message", cb || function(){}, title || "Defaul prompt title", buttons || ['Ok','Cancelar'], defaultText || ' ');
 }
 
+compiledTemplates = {};
+function renderTemplate(tmpl, cb) {
+
+	$.get(tmpl + ".html", function(data) {
+		respond = data;
+		compiledTemplates[tmpl] = Mustache.compile(respond);
+		if (cb)
+			cb();
+	}, "html");
+
+}
+
 // Filename: app.js
 define(['jquery', 'fastclick', 'underscore', 'backbone', 'router' // Request router.js
 ], function($, FastClick, _, Backbone, Router) {
