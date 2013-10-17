@@ -4,6 +4,30 @@ function alert(msg) {
 	navigator.notification.alert(msg, null, "Alert", "OK");
 }
 
+function showAppHeaderFooter(h, f){
+	
+	if(h === true)
+		$("#page .header").show();
+	
+	if(f === true)
+		$("#page #footer").show();
+		
+	$(".page-wrapper").removeClass("remove-footer");
+	
+}
+
+function hideAppHeaderFooter(h, f){
+	
+	if(h === true)
+		$("#page .header").hide();
+	
+	if(f === true){
+		$("#page #footer").hide();
+		$(".page-wrapper").addClass("remove-footer");
+	}
+	
+}
+
 function blockUI(msg, timeout) {
 	$.blockUI({
 		message : "<img src='imgs/loading.gif' /> <br> " + msg,

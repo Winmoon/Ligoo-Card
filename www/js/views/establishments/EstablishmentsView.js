@@ -4,11 +4,15 @@ define(['jquery', 'underscore', 'backbone',
 		function($, _, Backbone, listViewTemplate, showViewTemplate) {
 
 	var establishmentView = Backbone.View.extend({
-		el : $("#page"),
+		el : $("#page .page-wrapper"),
+		$headerTitle : $("#page .header > .title"),
+		
+		initialize : function (){
+			showAppHeaderFooter(true, true);
+		},
 		
 		showView : function (id){
-			//alert("OK");
-			console.log(id);
+			this.$headerTitle.html("Estabelecimento");
 			this.$el.html(showViewTemplate);
 		},
 
@@ -16,8 +20,10 @@ define(['jquery', 'underscore', 'backbone',
 			
 			if(this.options.id)//show establisment
 				this.showView(this.options.id);
-			else //list establishment
-			this.$el.html(listViewTemplate);
+			else{ //list establishment
+				this.$headerTitle.html("Próximos a mim");
+				this.$el.html(listViewTemplate);
+			}
 			
 		}
 		

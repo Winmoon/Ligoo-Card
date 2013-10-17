@@ -202,6 +202,7 @@ input {
 	width: 100%;
 	top: 0px;
 	z-index: 1000;
+	display: none;
 }
 
 .back-btn {
@@ -255,13 +256,14 @@ input {
 	margin-top: 10px;
 }
 
-#news-view .logo, #mycards-view .logo, #establishments-view .logo {
+#news-view .logo, #mycards-view .logo, #establishments-show-view .logo, #establishments-list-view .logo {
 	bottom: -90px;
 	position: relative;
 	width: 235px;
 }
 
-#news-view, #mycards-view, #establishments-view {
+#news-view, #mycards-view, #establishments-show-view,
+#establishments-list-view {
 	font-size: 12px;
 }
 
@@ -330,7 +332,8 @@ input {
 	margin-left: -145px;
 }
 
-#news-view hr, #mycards-view hr, #establishments-view hr {
+#news-view hr, #mycards-view hr, #establishments-show-view hr, 
+#establishments-list-view hr {
 	border-color: white;
 	margin-left: -10px;
 	margin-right: -10px;
@@ -413,12 +416,12 @@ input {
 	line-height: 130%;
 	padding-left: 10px;
 	position: relative;
-	text-align: left;
+	text-align: center;
 	text-shadow: 1px 1px #333333;
 	top: 20px;
 }
 
-#establishments-view {
+#establishments-show-view {
 	margin-top: 186px;
 	padding: 0;
 }
@@ -470,6 +473,7 @@ input {
 	font-weight: normal;
 	padding-left: 26px;
 	padding-top: 7px;
+	min-height: 34px;
 }
 
 .ofertas .text, .sobre .text {
@@ -485,20 +489,114 @@ input {
 	border: 1px inset white;
 	border-radius: 10px;
 	-webkit-border-radius: 10px;
-	height: 18px;
+	height: 22px;
 	overflow: hidden;
-	width: 80%;
 }
 
 .ofertas .points-to-win {
 	background-image: url("../imgs/points-to-win-bg.png");
-	border-radius: 10px;
-	-webkit-border-radius: 10px;
-	height: 15px;
-	width: 0%;
+	background-size: contain;
+	border-radius: 10px 10px 10px 10px;
+	height: 20px;
+	width: 304px;
 }
 
 .ofertas-item {
 	overflow: auto;
 	margin-bottom: 5px;
+}
+
+.ofertas .points-to-win-content .trofeu {
+	display: inline-block;
+	width: 14px;
+	vertical-align: bottom;
+}
+
+.ofertas .points-to-win-content .points-to-win-number {
+	position: relative;
+	right: 4px;
+	top: -18px;
+}
+
+.page-wrapper {
+	left: 0;
+	position: absolute;
+	right: 0;
+	bottom: 75px;
+	top: 0px;
+}
+
+.page-wrapper.remove-footer{
+	bottom: 0px;
+}
+
+#footer {
+	background: url("../imgs/footer-bar-bg.png") repeat scroll center center transparent;
+	bottom: 0;
+	color: white;
+	font-family: "Quayside";
+	font-size: 22px;
+	height: 75px;
+	line-height: 50px;
+	position: fixed;
+	text-shadow: 1px 1px 0 gray;
+	width: 100%;
+	z-index: 1000;
+	display: none;
+}
+
+@media  only screen and (min-device-pixel-ratio: 2),   
+        only screen and (min-resolution: 192dpi) {  
+    /* Style Rules */  
+    
+    #footer{
+    	background: url("../imgs/footer-bar-bg-2x.png") repeat scroll center center transparent;
+    	height: 150px;	
+    }
+    
+}
+
+.tab-icons {
+  position: absolute;
+  top: 8px;
+  width: 100%;
+}
+
+.button {
+    height: auto;
+    padding-top: 2px;
+    position: relative;
+    text-align: center;
+    width: 61px;
+}
+
+
+.button img {
+    max-width: 24px;
+    vertical-align: middle;
+}
+
+.tab-icons a{
+	color: white;
+	text-shadow: 1px 1px rgb(35,149,148);
+}
+
+.tab-icons .label {
+	font-size: 15px;
+	line-height: 100%;
+	position: relative;
+	top: -10px;
+}
+
+.button.btn-large {
+  margin-top: -5px;
+  width: 76px;
+}
+
+.button.btn-large > .label{
+	top: -5px;
+}
+
+.button.btn-large img {
+  max-width: 29px;
 }

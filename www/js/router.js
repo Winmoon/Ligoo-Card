@@ -53,6 +53,12 @@ define(['jquery', 'underscore', 'backbone', 'views/login/LoginView',
 			homeView = new HomeView();
 			homeView.render();
 		});
+		
+		app_router.on('route:mycards', function() {
+
+			mycardsView = new MyCardsView();
+			mycardsView.render();
+		});
 
 		app_router.on('route:login', function() {
 
