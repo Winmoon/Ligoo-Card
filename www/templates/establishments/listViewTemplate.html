@@ -1,95 +1,27 @@
 <div class="content" id="establishments-list-view">
-	<!-- <div class="arrow_box_white txt-center">
-	<span class="txt-blue"> Não foi encontrado estabelecimentos cadastrados próximos a você.</span>
-	<br>
+	{{#noHaveEstablishments}}
+	<div class="arrow_box_white txt-center">
+		<span class="txt-blue"> Não foi encontrado estabelecimentos cadastrados próximos a você.</span>
+		<br>
 	</div>
 	<div class="logo">
-	<img src="./imgs/logo.png" />
-	</div> -->
+		<img src="./imgs/logo.png" />
+	</div>
+	{{/noHaveEstablishments}}
 	<div class="listview">
-		<div class="item">
-			<div class="icon pull-left"></div>
+		{{#establishments}}
+		<div class="item" data-establishment-id={{id}}>
+			<div class="icon pull-left" style="background-image: url('{{logo}}')"></div>
 			<div class="description text-shadow-white pull-left">
 				<div class="title">
-					Subway
+					{{name}}
 				</div>
 				<div>
-					2Km
+					{{distance}}
 				</div>
 			</div>
 		</div>
 		<hr class="separator" />
-		<div class="item">
-			<div class="icon pull-left"></div>
-			<div class="description text-shadow-white pull-left">
-				<div class="title">
-					Subway
-				</div>
-				<div>
-					2Km
-				</div>
-			</div>
-		</div>
-		<hr class="separator" />
-		<div class="item">
-			<div class="icon pull-left"></div>
-			<div class="description text-shadow-white pull-left">
-				<div class="title">
-					Subway
-				</div>
-				<div>
-					2Km
-				</div>
-			</div>
-		</div>
-		<hr class="separator" />
-		<div class="item">
-			<div class="icon pull-left"></div>
-			<div class="description text-shadow-white pull-left">
-				<div class="title">
-					Subway
-				</div>
-				<div>
-					2Km
-				</div>
-			</div>
-		</div>
-		<hr class="separator" />
-		<div class="item">
-			<div class="icon pull-left"></div>
-			<div class="description text-shadow-white pull-left">
-				<div class="title">
-					Subway
-				</div>
-				<div>
-					2Km
-				</div>
-			</div>
-		</div>
-		<hr class="separator" />
-		<div class="item">
-			<div class="icon pull-left"></div>
-			<div class="description text-shadow-white pull-left">
-				<div class="title">
-					Subway
-				</div>
-				<div>
-					2Km
-				</div>
-			</div>
-		</div>
-		<hr class="separator" />
-		<div class="item">
-			<div class="icon pull-left"></div>
-			<div class="description text-shadow-white pull-left">
-				<div class="title">
-					Subway
-				</div>
-				<div>
-					2Km
-				</div>
-			</div>
-		</div>
-		<hr class="separator" />
+		{{/establishments}}
 	</div>
 </div>

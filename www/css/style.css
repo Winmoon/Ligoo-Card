@@ -285,6 +285,10 @@ input {
 	-webkit-border-radius: 5px;
 	height: 34px;
 	width: 34px;
+	background-size: contain !important;
+	-webkit-background-size: contain !important;
+	background-color: white !important;
+	background-repeat: no-repeat;
 }
 
 .news-post-box .news-post-header .description {
@@ -298,6 +302,11 @@ input {
 	margin-bottom: 3px;
 	overflow: hidden;
 	margin-top: 3px;
+}
+
+.news-post-box .news-post-header .description > .address {
+  overflow: hidden;
+  height: 27px;
 }
 
 .news-post-box > .arrow_box {
@@ -352,7 +361,6 @@ input {
 	background-position: center center;
 	background-size: contain;
 	-webkit-background-size: contain;
-	background-image: url("../imgs/logo_subway.png");
 	height: 49px;
 	left: 11px;
 	position: relative;
@@ -385,7 +393,6 @@ input {
 
 .establishment-top .icon {
 	background-color: white;
-	background-image: url("../imgs/logo_subway.png");
 	background-position: center center;
 	background-repeat: no-repeat;
 	background-size: contain;
@@ -496,6 +503,7 @@ input {
 .ofertas .points-to-win {
 	background-image: url("../imgs/points-to-win-bg.png");
 	background-size: contain;
+	-webkit-background-size: contain;
 	border-radius: 10px 10px 10px 10px;
 	height: 20px;
 	width: 304px;
@@ -522,7 +530,7 @@ input {
 	left: 0;
 	position: absolute;
 	right: 0;
-	bottom: 75px;
+	bottom: 62px;
 	top: 0px;
 }
 
@@ -545,17 +553,6 @@ input {
 	display: none;
 }
 
-@media  only screen and (min-device-pixel-ratio: 2),   
-        only screen and (min-resolution: 192dpi) {  
-    /* Style Rules */  
-    
-    #footer{
-    	background: url("../imgs/footer-bar-bg-2x.png") repeat scroll center center transparent;
-    	height: 150px;	
-    }
-    
-}
-
 .tab-icons {
   position: absolute;
   top: 8px;
@@ -567,7 +564,7 @@ input {
     padding-top: 2px;
     position: relative;
     text-align: center;
-    width: 61px;
+    width: 53.33px;
 }
 
 
@@ -579,6 +576,7 @@ input {
 .tab-icons a{
 	color: white;
 	text-shadow: 1px 1px rgb(35,149,148);
+	display: inline-block;
 }
 
 .tab-icons .label {
@@ -589,8 +587,8 @@ input {
 }
 
 .button.btn-large {
-  margin-top: -5px;
-  width: 76px;
+  top: -5px;
+  width: 84px;
 }
 
 .button.btn-large > .label{
@@ -600,3 +598,99 @@ input {
 .button.btn-large img {
   max-width: 29px;
 }
+
+#loaderImage{
+	margin: 0 auto;
+}
+
+/*.popup-cover {
+  background: none repeat scroll 0 0 rgba(100, 100, 100, 0.5);
+  height: 100%;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000000;
+}
+
+.popup {
+  background: none repeat scroll 0 0 rgba(39, 39, 39, 0.9);
+  border-radius: 10px 10px 10px 10px;
+  -webkit-border-radius: 10px 10px 10px 10px;
+  color: white;
+  margin: -30% auto 0;
+  min-height: 150px;
+  overflow: hidden;
+  position: relative;
+  top: 50%;
+  width: 80%;
+  z-index: 100000000;
+}
+
+.popup-header {
+  font-size: 14px;
+  position: relative;
+  text-align: center;
+  top: 15px;
+  z-index: 1000000;
+}
+
+.popup-header-effect {
+  background: none repeat scroll 0 0 rgba(155, 155, 155, 0.33);
+  border-radius: 50% 50% 50% 50%;
+  -webkit-border-radius: 50% 50% 50% 50%;
+  bottom: 83%;
+  box-shadow: 0 0 38px #272727 inset;
+  -webkit-box-shadow: 0 0 38px #272727 inset;
+  content: "";
+  font-size: 14px;
+  left: -20%;
+  position: absolute;
+  right: -20%;
+  text-align: center;
+  top: -25%;
+}
+
+.popup-content {
+  font-size: 12px;
+  padding: 10px;
+  position: absolute;
+  text-align: center;
+  top: 40px;
+}
+
+  	height: 25px;
+  	text-shadow: 1px 1px #33CCCC;
+  	width: 100%;
+}
+
+.popup-footer {
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+}
+
+button:active:hover, input[type="reset"]:active:hover, input[type="button"]:active:hover, input[type="submit"]:active:hover {
+  padding: 0;
+}*/
+
+/*iPhone 5 in portrait*/
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 568px) 
+and (orientation : portrait) { /* STYLES GO HERE */ 
+	
+	.btn-large{width: };
+	
+	
+}
+
+/*iPhone 2G-4S in portrait*/
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px) 
+and (orientation : portrait) { /* STYLES GO HERE */ }

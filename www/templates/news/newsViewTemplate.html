@@ -1,88 +1,35 @@
 <div class="content" id="news-view">
-	<!-- <div class="arrow_box_white txt-center">
-	<span class="txt-blue"> Olá, ainda não temos nenhuma novidade para você.</span>
-	<br>
-	Fique atento, em breve teremos grandes novidades por aqui.
-	<br>
-	<br>
+	{{#noHaveNews}}
+	<div class="arrow_box_white txt-center">
+		<span class="txt-blue"> Olá, ainda não temos nenhuma novidade para você.</span>
+		<br>
+		Fique atento, em breve teremos grandes novidades por aqui.
+		<br>
+		<br>
 	</div>
 	<div class="logo">
-	<img src="./imgs/logo.png" />
-	</div> -->
+		<img src="./imgs/logo.png" />
+	</div>
+	{{/noHaveNews}}	
+	{{#news}}
 	<div class="news-post-box">
 		<div class="news-post-header">
-			<div class="icon pull-left"></div>
+			<div class="icon pull-left" style="background-image: url('{{establishment.logo_urls.thumb}}')"></div>
 			<div class="description pull-left">
 				<div class="title">
-					Subway
+					{{establishment.name}}
 				</div>
 				<div class="address">
-					Rua T-60, 725 Centro - Goiânia/GO
+					{{establishment.address}}
 				</div>
 			</div>
 		</div>
 		<div class="arrow_box">
 			<div class="message">
-				ipsum dolor sit amet ipsum dolor sit ametipsum dolor sit amet ipsum dolor sit amet ipsum dolor sit ametipsum dolor sit amet
+				{{news}}
 			</div>
 		</div>
 		<hr class="separator" />
 	</div>
-	<div class="news-post-box">
-		<div class="news-post-header">
-			<div class="icon pull-left"></div>
-			<div class="description pull-left">
-				<div class="title">
-					Subway
-				</div>
-				<div class="address">
-					Rua T-60, 725 Centro - Goiânia/GO
-				</div>
-			</div>
-		</div>
-		<div class="arrow_box">
-			<div class="message">
-				ipsum dolor sit amet ipsum dolor sit ametipsum dolor sit amet ipsum dolor sit amet ipsum dolor sit ametipsum dolor sit amet
-			</div>
-		</div>
-		<hr class="separator" />
-	</div>
-	<div class="news-post-box">
-		<div class="news-post-header">
-			<div class="icon pull-left"></div>
-			<div class="description pull-left">
-				<div class="title">
-					Subway
-				</div>
-				<div class="address">
-					Rua T-60, 725 Centro - Goiânia/GO
-				</div>
-			</div>
-		</div>
-		<div class="arrow_box">
-			<div class="message">
-				ipsum dolor sit amet ipsum dolor sit ametipsum dolor sit amet ipsum dolor sit amet ipsum dolor sit ametipsum dolor sit amet
-			</div>
-		</div>
-		<hr class="separator" />
-	</div>
-	<div class="news-post-box">
-		<div class="news-post-header">
-			<div class="icon pull-left"></div>
-			<div class="description pull-left">
-				<div class="title">
-					Subway
-				</div>
-				<div class="address">
-					Rua T-60, 725 Centro - Goiânia/GO
-				</div>
-			</div>
-		</div>
-		<div class="arrow_box">
-			<div class="message">
-				ipsum dolor sit amet ipsum dolor sit ametipsum dolor sit amet ipsum dolor sit amet ipsum dolor sit ametipsum dolor sit amet
-			</div>
-		</div>
-		<hr class="separator" />
-	</div>
+	{{/news}}
 </div>

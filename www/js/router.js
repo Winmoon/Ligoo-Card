@@ -11,7 +11,7 @@ define(['jquery', 'underscore', 'backbone', 'views/login/LoginView',
 			'login' : 'login',
 			'sign_in' : 'sign_in',
 			'news' : 'news',
-			'establishments/list' : 'establishments_list',
+			'establishments' : 'establishments_list',
 			'establishments/show/:id' : 'establishments_show',
 			'mycards' : 'mycards',
 			'*actions' : 'defaultAction'
@@ -23,7 +23,7 @@ define(['jquery', 'underscore', 'backbone', 'views/login/LoginView',
 		var app_router = new AppRouter;
 
 		app_router.on('route:defaultAction', function(actions) {
-			app_router.navigate("establishments/show/1", {
+			app_router.navigate("news", {
 				trigger : true,
 				replace : true
 			});
@@ -32,14 +32,14 @@ define(['jquery', 'underscore', 'backbone', 'views/login/LoginView',
 		app_router.on('route:establishments_show', function(id) {
 
 			establishmentsView = new EstablishmentsView({id: id});
-			establishmentsView.render();
+			establishmentsView.showView();
 		});
 		
 		
 		app_router.on('route:establishments_list', function(action) {
 
 			establishmentsView = new EstablishmentsView();
-			establishmentsView.render();
+			establishmentsView.list();
 		});
 		
 		app_router.on('route:news', function() {

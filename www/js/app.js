@@ -1,42 +1,103 @@
-var app = {};
+app = {};
 
 function alert(msg) {
-	navigator.notification.alert(msg, null, "Alert", "OK");
+
+	if( typeof navigator.notification != "undefined")
+		navigator.notification.alert(msg, null, "Alert", "OK");
+	else
+		console.log(msg);
 }
 
-function showAppHeaderFooter(h, f){
-	
+function popup(msg, options) {
+
+	var defaults = {
+		showHeader : true,
+		title : 'LIGOOCARD',
+		content : msg,
+		showCancelButton : false,
+		animate : true,
+		buttons : [{
+			title : 'Ok',
+			click : function() {
+				Lollipop.close();
+			}
+		}],
+		onOpen : function() {
+			$("#lollipop-block-layer").click(function() {
+				Lollipop.close();
+			});
+		}
+	};
+
+	var extend = $.extend(true, defaults, options);
+
+	Lollipop.open(extend);
+}
+
+function showAppHeaderFooter(h, f) {
+
 	if(h === true)
 		$("#page .header").show();
-	
+
 	if(f === true)
 		$("#page #footer").show();
-		
+
 	$(".page-wrapper").removeClass("remove-footer");
-	
+
 }
 
-function hideAppHeaderFooter(h, f){
-	
+function hideAppHeaderFooter(h, f) {
+
 	if(h === true)
 		$("#page .header").hide();
-	
-	if(f === true){
+
+	if(f === true) {
 		$("#page #footer").hide();
 		$(".page-wrapper").addClass("remove-footer");
+	}
+
+}
+
+function loader(visibility) {
+	
+	new imageLoader(cImageSrc, 'startAnimation()');
+	
+	if(visibility == "hide"){
+		$.unblockUI();
+		stopAnimation();
+	}
+	else if (visibility == "show") {
+		stopAnimation();
+		$.blockUI({
+			message : "<div id='loaderImage'></div>",
+			css : {
+				"padding" : "10px",
+				"border-radius" : "78px",
+				"-webkit-border-radius" : "78px"
+			},
+			timeout : 0
+		});
 	}
 	
 }
 
 function blockUI(msg, timeout) {
+
+	if(!msg)
+		msg = "";
+
 	$.blockUI({
-		message : "<img src='imgs/loading.gif' /> <br> " + msg,
+		message : "<div id='loaderImage'></div>" + msg,
 		css : {
-			"padding" : "10px"
+			"padding" : "10px",
 		},
 		timeout : timeout || 0,
-		allowBodyStretch : true
+		allowBodyStretch : true,
+		onBlock : function() {
+			new imageLoader(cImageSrc, 'startAnimation()');
+		}
 	});
+
 }
 
 function confirm(message, confirmCallback, title, buttonLabels, dismissCallback) {
@@ -57,9 +118,31 @@ function prompt(message, cb, title, buttons, defaultTxt) {
 	}, title || "Defaul prompt title", buttons || ['Ok', 'Cancelar'], defaultText || ' ');
 }
 
+function getCoords(cb){
+	
+	app.userCoord = false;
+	
+	var success = function(s){
+		console.log("s");
+		console.log(s);
+		app.userCoord = [s.coords.latitude, s.coords.longitude];
+		
+		if(cb)
+			cb();
+		
+	};
+	
+	var error = function(e){
+		console.log("E");
+		alert("No getCoords");
+	};
+	
+	navigator.geolocation.getCurrentPosition(success,error);
+}
+
 // Filename: app.js
-define(['jquery', 'fastclick', 'underscore', 'backbone', 'router' // Request router.js
-], function($, FastClick, _, Backbone, Router) {
+define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' // Request router.js
+], function($, FastClick, _, Backbone, Router, Mustache) {
 	var initialize = function() {
 		// Pass in our Router module and call it's initialize function
 
@@ -73,11 +156,23 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router' // Request rou
 			this.remove();
 		};
 
+		app = {
+			userLoggedIn : false,
+			compiledTemplates : {},
+			loadTemplate : function(templName, tmpl) {
+
+				if(!app.compiledTemplates[templName])
+					app.compiledTemplates[templName] = Mustache.compile(tmpl);
+
+				return app.compiledTemplates[templName];
+			}
+		};
+		
 		Router.initialize();
+
 	};
 
 	return {
 		initialize : initialize
 	};
 });
-
