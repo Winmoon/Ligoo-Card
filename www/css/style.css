@@ -379,7 +379,6 @@ input {
 
 .establishment-top {
 	background-color: white;
-	background-image: url("../imgs/subway_topo.jpg");
 	background-position: center center;
 	background-repeat: no-repeat;
 	box-shadow: 0 -23px 10px -18px #333333 inset;
@@ -506,7 +505,7 @@ input {
 	-webkit-background-size: contain;
 	border-radius: 10px 10px 10px 10px;
 	height: 20px;
-	width: 304px;
+	width: 0%;
 }
 
 .ofertas-item {

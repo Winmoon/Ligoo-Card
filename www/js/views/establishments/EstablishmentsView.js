@@ -21,6 +21,7 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 			setTimeout(function() {
 
 				get_coupons(function(data) {
+
 					_this.coupons = JSON.parse(data.responseText);
 
 					get_establishment(_this.options.id, function(data) {
@@ -31,8 +32,31 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 
 						img_url_prefix = root_url.substring(0, root_url.length - 1);
 
-						$(_this.model.establishments).each(function() {
-							this.logo = img_url_prefix + this.logo_urls.thumb;
+						_this.model.establishment.logo = img_url_prefix + _this.model.establishment.logo_urls.thumb;
+						_this.model.establishment.cover = img_url_prefix + _this.model.establishment.cover;
+						_this.model.establishment.noTotalPoints = true;
+						_this.model.establishment.totalPoints = 0;
+
+						$(_this.coupons[0].points).each(function() {
+							_this.model.establishment.totalPoints+=1;
+						});
+						
+						_this.model.establishment.totalPoints=10;
+						
+						if(_this.model.establishment.totalPoints > 0){
+							_this.model.establishment.noTotalPoints = false;
+							_this.model.establishment.remove_icon = "remove-icon";
+						}
+						else _this.model.establishment.totalPoints = false;
+
+						$(_this.model.establishment.promotions).each(function() {
+							this.valid_until = parseDate(this.valid_until);
+							this.percentage = (_this.model.establishment.totalPoints * 100) / this.points+"%";
+							
+							if(this.percentage == "100%"){
+								
+							}
+							
 						});
 
 						_this.templateOutput = app.loadTemplate("establishments_show", showViewTemplate)(_this.model.establishment);
@@ -47,7 +71,28 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 		},
 
 		events : {
-			"click .item" : "open"
+			"click .item" : "open",
+			"click .like-counter" : "like_counter"
+		},
+
+		like_counter : function() {
+
+			loader('show');
+
+			var cb = function(data) {
+
+				var response = JSON.parse(data.responseText);
+
+				if(response.user_id)
+					popup("Obrigado por gostar de nosso estabelecimento!");
+				else
+					popup("Muito obrigado por gostar tanto de nós, porém, você pode curtir apenas uma vez.");
+
+				loader('hide');
+			};
+
+			like_establishment(this.options.id, cb);
+			//mobile.js
 		},
 
 		open : function(d) {
