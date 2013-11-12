@@ -100,17 +100,17 @@ function blockUI(msg, timeout) {
 
 }
 
-function confirm(message, confirmCallback, title, buttonLabels, dismissCallback) {
-	navigator.notification.confirm(message, function(b) {
-		if(b == 1) {
-			if(confirmCallback)
-				confirmCallback();
-		} else {
-			if(dismissCallback)
-				dismissCallback();
-		}
-	}, title || "Confirm", buttonLabels || ["Yes", "No"]);
-}
+// function confirm(message, confirmCallback, title, buttonLabels, dismissCallback) {
+	// navigator.notification.confirm(message, function(b) {
+		// if(b == 1) {
+			// if(confirmCallback)
+				// confirmCallback();
+		// } else {
+			// if(dismissCallback)
+				// dismissCallback();
+		// }
+	// }, title || "Confirm", buttonLabels || ["Yes", "No"]);
+// } //TODO ativar quando usar o phonegap
 
 function prompt(message, cb, title, buttons, defaultTxt) {
 	navigator.notification.prompt(message || "No message", cb ||

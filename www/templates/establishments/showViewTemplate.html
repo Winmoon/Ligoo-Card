@@ -15,24 +15,16 @@
 <div class="content" id="establishments-show-view">
 	<div class="grid-50">
 		<div class="pull-left like-counter block">
-			<strong>Gostei</strong>
+			<strong>{{liked}}</strong>
 			<br>
 			<span class="counter">{{likes_count}}</span>
 			gostaram
 		</div>
-		<div class="pull-left add-card {{remove_icon}} block">
-			{{#noTotalPoints}}
-			<strong>Adicionar
-				<br>
-				cartão
-			</strong>
-			{{/noTotalPoints}}
-			{{#totalPoints}}
-				<div style="font-size: 18px; text-align: center; width: 100%; margin-left: -31px;">
-					{{totalPoints}}
-				</div>
-				pontos
-			{{/totalPoints}}
+		<div class="pull-left add-card remove-icon block">
+			<div style="font-size: 18px; text-align: center; width: 100%; margin-left: -31px;">
+				{{totalPoints}}
+			</div>
+			pontos
 		</div>
 	</div>
 	<div class="clearfix"></div>
@@ -41,8 +33,10 @@
 			GANHE PONTOS
 		</div>
 		<div class="text">
-			Gastando <span class="txt-blue">R$ 10,00</span> por pessoa você ganha <span class="txt-blue">10 pontos</span>
+			<!--	Gastando <span class="txt-blue">R$ 10,00</span> por pessoa você ganha <span class="txt-blue">10 pontos</span> -->
+			{{fidelity_card}}
 		</div>
+
 	</div>
 	<div class="clearfix"></div>
 	<div class="ofertas">
@@ -51,18 +45,18 @@
 		</div>
 
 		{{#promotions}}
-		<div class="ofertas-item" data-promotion-id='{{id}}'>
+		<div class="ofertas-item {{wonPremiumClass}}" data-promotion-id='{{id}}'>
 			<div class="text">
 				{{description}}
 			</div>
 			<div class="points-to-win-content">
-				<div class="points-to-win" style="width: {{percentage}}"></div>
+				<div class="points-to-win {{wonPremiumClass}}" style="width: {{percentage}}"></div>
 				<div class="points-to-win-number pull-right">
 					<span class="number">{{points}}</span>
 					<img class="trofeu" src="imgs/trofeu.png">
 				</div>
 			</div>
-			<font style="font-weight: normal">Valido até {{valid_until}}</font>
+			<font style="font-weight: normal">Válido até {{valid_until}}</font>
 		</div>
 		{{/promotions}}
 	</div>

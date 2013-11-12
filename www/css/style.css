@@ -602,6 +602,43 @@ input {
 	margin: 0 auto;
 }
 
+
+/* Premio ganho animação**/
+.points-to-win.won-premium {
+	-webkit-animation-name: soar;
+	-webkit-animation-duration: 3s;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: ease-in-out;
+	-moz-animation-name: soar;
+	-moz-animation-duration: 3s;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-timing-function: ease-in-out;
+	z-index: 30;
+/*	transform: rotate(15deg);*/
+/*	-webkit-transform: rotate(15deg);*/
+/*	-moz-transform: rotate(15deg);*/
+    background-image: url("../imgs/points-to-win-green-bg.png") !important;
+    opacity: 1;
+}
+
+@-webkit-keyframes soar {
+	50% {
+		opacity: 0.5;
+	}
+}
+
+@-moz-keyframes soar {
+	0% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
 /*.popup-cover {
   background: none repeat scroll 0 0 rgba(100, 100, 100, 0.5);
   height: 100%;

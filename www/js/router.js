@@ -23,7 +23,9 @@ define(['jquery', 'underscore', 'backbone', 'views/login/LoginView',
 		var app_router = new AppRouter;
 
 		app_router.on('route:defaultAction', function(actions) {
-			app_router.navigate("news", {
+			
+			if(app.userLoggedIn === false)
+			app_router.navigate("login", {
 				trigger : true,
 				replace : true
 			});

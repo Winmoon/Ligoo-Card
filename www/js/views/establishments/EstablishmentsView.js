@@ -6,6 +6,7 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 		model : {},
 		templateOutput : "",
 		coupons : {},
+		points : {},
 
 		initialize : function() {
 			showAppHeaderFooter(true, true);
@@ -18,12 +19,21 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 
 			_this = this;
 
+			sign_in();
+
 			setTimeout(function() {
 
-				get_coupons(function(data) {
+				get_points(function(data) {
+					_this.points = JSON.parse(data.responseText);
 
-					_this.coupons = JSON.parse(data.responseText);
+					_this.pointsEarned = 0;
+					$(_this.points).each(function() {
 
+						if(this.establishment_id == _this.options.id)
+							_this.pointsEarned++;
+					});
+
+					//GEt establishments
 					get_establishment(_this.options.id, function(data) {
 
 						_this.model = {
@@ -34,36 +44,37 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 
 						_this.model.establishment.logo = img_url_prefix + _this.model.establishment.logo_urls.thumb;
 						_this.model.establishment.cover = img_url_prefix + _this.model.establishment.cover;
-						_this.model.establishment.noTotalPoints = true;
-						_this.model.establishment.totalPoints = 0;
+						_this.model.establishment.totalPoints = _this.pointsEarned;
 
-						$(_this.coupons[0].points).each(function() {
-							_this.model.establishment.totalPoints+=1;
-						});
-						
-						_this.model.establishment.totalPoints=10;
-						
-						if(_this.model.establishment.totalPoints > 0){
-							_this.model.establishment.noTotalPoints = false;
-							_this.model.establishment.remove_icon = "remove-icon";
-						}
-						else _this.model.establishment.totalPoints = false;
-
+						havePremiuns = false;
 						$(_this.model.establishment.promotions).each(function() {
+							
 							this.valid_until = parseDate(this.valid_until);
-							this.percentage = (_this.model.establishment.totalPoints * 100) / this.points+"%";
+							this.percentage = (_this.model.establishment.totalPoints * 100) / this.points + "%";
 							
-							if(this.percentage == "100%"){
-								
+							if(parseInt(this.percentage) >= 100) {
+								havePremiuns = true;
+								this.wonPremiumClass = "won-premium";
 							}
-							
+						});
+
+						_this.model.establishment.liked = "Curtir";
+						// padrao usuario ainda nao gostou do estabelecimento
+
+						$(_this.model.establishment.likes).each(function() {
+							if(app.userData.id === this.user_id)
+								_this.model.establishment.liked = "Já curti!";
 						});
 
 						_this.templateOutput = app.loadTemplate("establishments_show", showViewTemplate)(_this.model.establishment);
 						_this.$el.html(_this.templateOutput);
 						loader('hide');
 
+						if(havePremiuns === true)
+							popup(messages.premiumWon);
+
 					});
+
 				});
 
 			}, 2000);
@@ -72,7 +83,17 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 
 		events : {
 			"click .item" : "open",
-			"click .like-counter" : "like_counter"
+			"click .like-counter" : "like_counter",
+			"click .ofertas-item.won-premium" : "won_coupon_create_coupon"
+		},
+		
+		won_coupon_create_coupon: function (d){
+			var id = $(d.currentTarget).data("promotion-id");
+			
+			if(confirm("Esta operação deve ser realizada no estabelecimento, caso contrário, poderá perder seus pontos. Deseja prosseguir?"))
+				create_coupon(id, function(data){
+					console.log(data);
+				});
 		},
 
 		like_counter : function() {

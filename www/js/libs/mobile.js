@@ -21,8 +21,10 @@ sign_in = function() {
 			password : "123321321"
 		}
 	}, function(data) {
-		if(data.id)
+		if(data.id) {
 			app.userLoggedIn = true;
+			app.userData = data;
+		}
 
 		return console.log(data);
 	});
@@ -52,9 +54,9 @@ create_point = function(establishment) {
 	});
 };
 
-get_points = function() {
-	return $.get(url("user/api/points.json"), function(data) {
-		return console.log(data);
+get_points = function(cb) {
+	$.get(url("user/api/points.json")).complete(function(data) {
+		cb(data);
 	});
 };
 
@@ -87,18 +89,16 @@ get_establishment = function(establishment, cb) {
 
 };
 
-create_coupon = function(promotion) {
-	return $.get(url("user/api/" + promotion + "/coupon.json"), function(data) {
-		return console.log(data);
+create_coupon = function(promotion, cb) {
+	$.get(url("user/api/" + promotion + "/coupon.json")).complete(function(data) {
+		cb(data);
 	});
 };
 
-get_coupons = function(cb) {
-
-	$.get(url("user/api/coupons.json")).complete(function(data) {
+check_coupon = function(coupon, establishment, cb) {
+	$.get(url("user/api/" + establishment + "/check_coupon.json"), {coupon_id : coupon}).complete(function(data) {
 		cb(data);
 	});
-
 };
 
 like_establishment = function(establishment, cb) {
