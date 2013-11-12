@@ -19,8 +19,6 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 
 			_this = this;
 
-			sign_in();
-
 			setTimeout(function() {
 
 				get_points(function(data) {
@@ -48,10 +46,10 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 
 						havePremiuns = false;
 						$(_this.model.establishment.promotions).each(function() {
-							
+
 							this.valid_until = parseDate(this.valid_until);
 							this.percentage = (_this.model.establishment.totalPoints * 100) / this.points + "%";
-							
+
 							if(parseInt(this.percentage) >= 100) {
 								havePremiuns = true;
 								this.wonPremiumClass = "won-premium";
@@ -84,14 +82,20 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 		events : {
 			"click .item" : "open",
 			"click .like-counter" : "like_counter",
-			"click .ofertas-item.won-premium" : "won_coupon_create_coupon"
+			"click .ofertas-item.won-premium" : "won_coupon_create_coupon",
+			"click .refresh" : "refresh"
 		},
-		
-		won_coupon_create_coupon: function (d){
+
+		refresh : function() {
+			establishmentsView.initialize();
+			establishmentsView.list();
+		},
+
+		won_coupon_create_coupon : function(d) {
 			var id = $(d.currentTarget).data("promotion-id");
-			
+
 			if(confirm("Esta operação deve ser realizada no estabelecimento, caso contrário, poderá perder seus pontos. Deseja prosseguir?"))
-				create_coupon(id, function(data){
+				create_coupon(id, function(data) {
 					console.log(data);
 				});
 		},

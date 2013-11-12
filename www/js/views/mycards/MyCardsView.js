@@ -19,7 +19,7 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/mycards/myCardsViewT
 		open : function(d) {
 
 			var id = $(d.currentTarget).data("establishment-id");
-
+			
 			Backbone.Router.prototype.navigate("establishments/show/" + id, {
 				trigger : true,
 				replace : true
@@ -30,8 +30,6 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/mycards/myCardsViewT
 		render : function() {
 			_this = this;
 			this.$headerTitle.html("Meus Cartões");
-
-			sign_in();
 
 			setTimeout(function() {
 				get_points(function(data) {

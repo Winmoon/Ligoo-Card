@@ -13,20 +13,31 @@ make_base_auth = function(user, password) {
 	return "Basic " + hash;
 };
 
-sign_in = function() {
-	return $.post(url("user/users/sign_in.json"), {
+sign_in = function(user, pass) {
+	loader('show');
+	
+	$.post(url("user/users/sign_in.json"), {
 		user : {
 			remember_me : 1,
-			email : "admin3@winmoon.com",
-			password : "123321321"
+			email : user,
+			password : pass
 		}
 	}, function(data) {
 		if(data.id) {
 			app.userLoggedIn = true;
 			app.userData = data;
-		}
 
-		return console.log(data);
+			Backbone.Router.prototype.navigate("welcome", {
+				trigger : true,
+				replace : true
+			}); 
+
+		} else {
+			popup(data.error);
+		}
+		
+		loader('hide');
+
 	});
 };
 
@@ -96,7 +107,9 @@ create_coupon = function(promotion, cb) {
 };
 
 check_coupon = function(coupon, establishment, cb) {
-	$.get(url("user/api/" + establishment + "/check_coupon.json"), {coupon_id : coupon}).complete(function(data) {
+	$.get(url("user/api/" + establishment + "/check_coupon.json"), {
+		coupon_id : coupon
+	}).complete(function(data) {
 		cb(data);
 	});
 };
@@ -139,10 +152,18 @@ $(function() {
 			withCredentials : true
 		},
 		statusCode : {
-			401 : function() {
-				if(confirm("Usuário não autenticado. Deseja fazer o Login?")) {
-					return sign_in();
-				}
+			401 : function(d) {
+				
+				var data = JSON.parse(d.responseText);
+				
+				alert(data.error);
+				
+				Backbone.Router.prototype.navigate("login", {
+					trigger : true,
+					replace : true
+				});
+				
+				loader('hide');
 			},
 			400 : function(error) {
 				return alert("Não passou na validação: " + error.responseText);
