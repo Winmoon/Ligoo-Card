@@ -15,7 +15,7 @@ make_base_auth = function(user, password) {
 
 sign_in = function(user, pass) {
 	loader('show');
-	
+
 	$.post(url("user/users/sign_in.json"), {
 		user : {
 			remember_me : 1,
@@ -24,37 +24,79 @@ sign_in = function(user, pass) {
 		}
 	}, function(data) {
 		if(data.id) {
-			app.userLoggedIn = true;
-			app.userData = data;
+
+			localStorage.setItem("userData", JSON.stringify(data));
 
 			Backbone.Router.prototype.navigate("welcome", {
 				trigger : true,
 				replace : true
-			}); 
+			});
 
 		} else {
 			popup(data.error);
 		}
-		
+
 		loader('hide');
 
 	});
 };
 
-sign_up = function() {
-	return $.post(url("user/users.json"), {
-		user : {
-			name : 'Usuario Teste 2',
-			email : "admin3@winmoon.com",
-			password : "123321321",
-			password_confirmation : "123321321",
-			gender : "M",
-			birth_date : "23/10/1986",
-			remember_me : 1
-		}
-	}, function(data) {
-		return console.log(data);
-	});
+sign_up = function(form) {
+
+	if(!checkMandatories(form)) {
+
+		var userDataArray = $("input", form).serializeArray();
+
+		var userData = {};
+
+		$(userDataArray).each(function(i, k) {
+			userData[k.name] = k.value;
+		});
+
+		$.post(url("user/users.json"), {
+			user : userData
+		}, function(data) {
+			if(data.id) {
+
+				localStorage.setItem("userData", JSON.stringify(data));
+
+				Backbone.Router.prototype.navigate("welcome", {
+					trigger : true,
+					replace : true
+				});
+
+			}
+		});
+	}
+};
+
+update_profile = function(form) {
+
+	loader("show");
+	
+	if(!checkMandatories(form)) {
+
+		var userDataArray = $("input", form).serializeArray();
+
+		var userData = {};
+
+		$(userDataArray).each(function(i, k) {
+			userData[k.name] = k.value;
+		});
+
+		$.post(url("user/api/update_profile.json"), {
+			user : userData,
+		}, function(data) {
+			if(data.id)
+				localStorage.setItem("userData", JSON.stringify(data));
+				
+			alert("Dados atualizados com sucesso");
+			
+			loader("hide");
+			
+		}).fail(function(){loader("hide");});
+	}
+
 };
 
 create_point = function(establishment) {
@@ -123,24 +165,9 @@ like_establishment = function(establishment, cb) {
 	});
 };
 
-get_profile = function() {
-	return $.get(url("user/api/profile.json"), {
-		latitude : -16.6896407,
-		longitude : -49.2511995
-	}, function(data) {
-		return console.log(data);
-	});
-};
-
-update_profile = function() {
-	return $.post(url("user/api/update_profile.json"), {
-		user : {
-			name : "Usuário com nome atualizado",
-			birth_date : '23/11/2013',
-			gender : 'M'
-		}
-	}, function(data) {
-		return console.log(data);
+get_profile = function(cb) {
+	$.get(url("user/api/profile.json"), function(data) {
+		cb(data);
 	});
 };
 
@@ -153,16 +180,29 @@ $(function() {
 		},
 		statusCode : {
 			401 : function(d) {
-				
+
 				var data = JSON.parse(d.responseText);
-				
+
 				alert(data.error);
-				
+
 				Backbone.Router.prototype.navigate("login", {
 					trigger : true,
 					replace : true
 				});
-				
+
+				loader('hide');
+			},
+			403 : function(d) {
+
+				var data = JSON.parse(d.responseText);
+
+				alert(data.error);
+
+				Backbone.Router.prototype.navigate("login", {
+					trigger : true,
+					replace : true
+				});
+
 				loader('hide');
 			},
 			400 : function(error) {

@@ -11,9 +11,17 @@ require.config({
 		lollipop: 'libs/jquery/lollipop',
 		base64: 'libs/base64',
 		mobile: 'libs/mobile', //TODO verificar se será retirado
-		animate_loader: 'libs/animate_loader'
+		animate_loader: 'libs/animate_loader',
+		facebook: 'libs/fb',
+		FB: 'libs/facebook'
 	},
 	shim : {
+		FB : {
+			deps: ['jquery', 'facebook']
+		},
+		facebook : {
+			deps: ['jquery']
+		},
 		base64 : {
 			deps: ['jquery']
 		},
@@ -34,7 +42,7 @@ require.config({
 
 require([
 // Load our app module and pass it to our definition function
-'app', 'jquery', 'fastclick', 'mustache', 'blockui', 'lollipop', 'base64', 'mobile', 'animate_loader'], function(App) {
+'app', 'jquery', 'fastclick', 'mustache', 'blockui', 'lollipop', 'base64', 'mobile', 'animate_loader' , 'facebook', 'FB'], function(App) {
 	// The "app" dependency is passed in as "App"
 	// Again, the other dependencies passed in are not "AMD" therefore don't pass a parameter to this function
 	App.initialize();

@@ -8,6 +8,10 @@ html, body {
 	height: 100%;
 }
 
+body{
+	font-family: verdana;
+}
+
 input, textarea, select {
 	-webkit-user-select: auto;
 	-webkit-touch-callout: auto;
@@ -38,6 +42,7 @@ input, textarea, select {
 	overflow: hidden;
 	position: absolute;
 }
+
 
 .content {
 	background: url("../imgs/bg.png") no-repeat scroll center center /cover transparent;
@@ -74,12 +79,15 @@ input, textarea, select {
 	width: 211px;
 }
 
-.btn-facebook:before {
-	color: #ACAEB3;
-	content: "Não postaremos nada que você não queira";
-	font-size: 11px;
-	position: relative;
-	top: 48px;
+.btn-facebook-before {
+  color: #ACAEB3;
+  content: "Não postaremos nada que você não queira";
+  font-size: 11px;
+  margin: 0 auto;
+  position: relative;
+  text-align: center;
+  text-shadow: 1px 1px white;
+  top: 32px;
 }
 
 .login-separator {
@@ -92,15 +100,15 @@ input, textarea, select {
 }
 
 .login-separator:before {
-	background: none repeat scroll 0 0 #F1F2F6;
-	content: "OU";
-	font-size: 10px;
-	left: 50%;
-	margin-left: -10px;
-	padding-left: 5px;
-	padding-right: 5px;
-	position: relative;
-	top: -10px;
+  background: none repeat scroll 0 0 #F1F2F6;
+  content: "OU";
+  font-size: 10px;
+  left: 50%;
+  margin-left: -10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  position: relative;
+  top: -13px;
 }
 
 .buttons_group {
@@ -253,7 +261,6 @@ input {
 .arrow_box_white .txt-blue, .news-post-box .txt-blue {
 	display: block;
 	font-size: 12px;
-	margin-top: 10px;
 }
 
 #news-view .logo, #mycards-view .logo, #establishments-show-view .logo, #establishments-list-view .logo {
@@ -448,7 +455,7 @@ input {
 	background-size: 30px auto;
 	-webkit-background-size: 30px auto;
 	padding-left: 60px;
-	padding-top: 15px;
+	padding-top: 8px;
 }
 
 .add-card {
@@ -586,8 +593,10 @@ input {
 }
 
 .button.btn-large {
+  margin-right: 3px;
   top: -5px;
-  width: 84px;
+  width: 79px;
+  margin-left: 5px;
 }
 
 .button.btn-large > .label{
@@ -600,6 +609,10 @@ input {
 
 #loaderImage{
 	margin: 0 auto;
+}
+
+.mandatory {
+	border: 1px solid red !important;
 }
 
 
@@ -637,6 +650,15 @@ input {
 	100% {
 		opacity: 1;
 	}
+}
+
+
+.establishment-total-points{
+	font-size: 18px; 
+	text-align: center; 
+	width: 100%;
+	margin-left: -31px; 
+	margin-top: -7px;
 }
 
 /*.popup-cover {

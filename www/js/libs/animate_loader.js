@@ -13,6 +13,9 @@
 	
 	function startAnimation(){
 		
+		clearTimeout(cPreloaderTimeout);
+		cPreloaderTimeout=false;		
+		
 		document.getElementById('loaderImage').style.backgroundImage='url('+cImageSrc+')';
 		document.getElementById('loaderImage').style.width=cWidth+'px';
 		document.getElementById('loaderImage').style.height=cHeight+'px';

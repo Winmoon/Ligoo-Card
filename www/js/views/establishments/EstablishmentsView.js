@@ -108,8 +108,10 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 
 				var response = JSON.parse(data.responseText);
 
-				if(response.user_id)
+				if(response.user_id){
 					popup("Obrigado por gostar de nosso estabelecimento!");
+					$(".like-counter .counter").text(parseInt($(".like-counter .counter").text())+1);
+				}
 				else
 					popup("Muito obrigado por gostar tanto de nós, porém, você pode curtir apenas uma vez.");
 

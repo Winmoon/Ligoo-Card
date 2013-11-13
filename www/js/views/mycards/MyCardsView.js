@@ -11,15 +11,15 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/mycards/myCardsViewT
 			loader('show');
 			this.$el.html("");
 		},
-		
+
 		events : {
 			"click .item" : "open"
 		},
-		
+
 		open : function(d) {
 
 			var id = $(d.currentTarget).data("establishment-id");
-			
+
 			Backbone.Router.prototype.navigate("establishments/show/" + id, {
 				trigger : true,
 				replace : true
@@ -42,33 +42,37 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/mycards/myCardsViewT
 					img_url_prefix = root_url.substring(0, root_url.length - 1);
 
 					mycardsAdded = {};
-					
+
 					mycards = [];
-					
+
 					$(_this.model.mycards).each(function(i) {
-						if(typeof mycardsAdded[this.establishment_id] == "undefined"){
+						if( typeof mycardsAdded[this.establishment_id] == "undefined") {
 							mycards.push({
-								id: this.establishment_id,
-								name: this.name,
-								logo: img_url_prefix + this.logo_urls.thumb,
-								pointsEarned: 0
+								id : this.establishment_id,
+								name : this.name,
+								logo : img_url_prefix + this.logo_urls.thumb,
+								pointsEarned : 0
 							});
-							
+
 							mycardsAdded[this.establishment_id] = 1;
-						}
-						else{
+						} else {
 							mycardsAdded[this.establishment_id] += 1;
 						}
 					});
-					
+
 					$(mycards).each(function(i, k) {
-						
-						k.pointsEarned = mycardsAdded[k.id];						
-							
+
+						k.pointsEarned = mycardsAdded[k.id];
+
+						if(mycardsAdded[k.id] == 1)
+							k.pointsText = "ponto";
+						else
+							k.pointsText = "pontos";
+
 					});
-					
+
 					_this.model.mycards = mycards;
-					
+
 					_this.templateOutput = app.loadTemplate("mycards", myCardsViewTemplate)(_this.model);
 					_this.$el.html(_this.templateOutput);
 					loader('hide');

@@ -8,6 +8,38 @@ function alert(msg) {
 		console.log(msg);
 }
 
+function checkMandatories(form) {
+
+	var haveMandatories = 0;
+
+	$("[rel*='mandatory']", form).each(function() {
+		if(this.value == "") {
+			if(this.tagName == "INPUT")
+				$(this).addClass("mandatory");
+			else
+				$(this).addClass("mandatory");
+
+			haveMandatories++;
+		} else {
+			if(this.tagName == "INPUT")
+				$(this).removeClass("mandatory");
+			else
+				$(this).removeClass("mandatory");
+		}
+	});
+
+	if(haveMandatories > 0) {
+		if( typeof navigator.notification != "undefined")
+			navigator.notification.alert('Campos obrigatórios não podem estar em branco', null, 'Erro', 'OK');
+		else
+			alert('Campos obrigatórios não podem estar em branco');
+
+		return true;
+	}
+
+	return false;
+}
+
 function popup(msg, options) {
 
 	var defaults = {
@@ -67,7 +99,6 @@ function loader(visibility) {
 		stopAnimation();
 	}
 	else if (visibility == "show") {
-		stopAnimation();
 		$.blockUI({
 			message : "<div id='loaderImage'></div>",
 			css : {
@@ -167,6 +198,14 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 				return app.compiledTemplates[templName];
 			}
 		};
+		
+		app.userData = localStorage.getItem("userData");
+		app.userData = JSON.parse(app.userData);
+
+		//TODO verificar se realmente vai precisar
+		if(typeof app.userData != "undefined" && app.userData != null && app.userData.id)
+			app.userLoggedIn = true;
+			
 		
 		Router.initialize();
 

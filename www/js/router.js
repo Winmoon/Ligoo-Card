@@ -1,10 +1,11 @@
 define(['jquery', 'underscore', 'backbone', 'views/login/LoginView', 
-		'views/sign_in/SignInView',
+		'views/sign_up/SignUpView',
 		'views/news/NewsView',
 		'views/mycards/MyCardsView',
 		'views/establishments/EstablishmentsView',
-		'views/welcome/WelcomeView'
-		], function($, _, Backbone, LoginView, SignInView, NewsView, MyCardsView, EstablishmentsView, WelcomeView) {
+		'views/welcome/WelcomeView',
+		'views/profile/ProfileView'
+		], function($, _, Backbone, LoginView, SignUpView, NewsView, MyCardsView, EstablishmentsView, WelcomeView, ProfileView) {
 
 	var AppRouter = Backbone.Router.extend({
 		routes : {
@@ -16,6 +17,7 @@ define(['jquery', 'underscore', 'backbone', 'views/login/LoginView',
 			'establishments/show/:id' : 'establishments_show',
 			'mycards' : 'mycards',
 			'welcome' : 'welcome',
+			'me' : 'me',
 			'*actions' : 'defaultAction'
 		}
 	});
@@ -31,6 +33,18 @@ define(['jquery', 'underscore', 'backbone', 'views/login/LoginView',
 				trigger : true,
 				replace : true
 			});
+			else {
+				app_router.navigate("welcome", {
+				trigger : true,
+				replace : true
+			});
+			}
+		});
+		
+		app_router.on('route:me', function() {
+
+			profileView = new ProfileView();
+			profileView.render();
 		});
 		
 		app_router.on('route:welcome', function() {
@@ -78,8 +92,8 @@ define(['jquery', 'underscore', 'backbone', 'views/login/LoginView',
 
 		app_router.on('route:sign_in', function() {
 
-			signInView = new SignInView();
-			signInView.render();
+			signUpView = new SignUpView();
+			signUpView.render();
 		});
 
 		app_router.on('route:alertview', function(type) {

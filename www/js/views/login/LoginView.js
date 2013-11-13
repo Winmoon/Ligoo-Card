@@ -1,4 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'text!templates/login/loginTemplate.html', 'text!templates/login/loginWithAccount.html'], function($, _, Backbone, loginTemplate, loginWithAccount) {
+define(['jquery', 'underscore', 'backbone', 'text!templates/login/loginTemplate.html'
+, 'text!templates/login/loginWithAccount.html'], function($, _, Backbone, loginTemplate, loginWithAccount) {
 
 	var LoginView = Backbone.View.extend({
 
@@ -12,9 +13,17 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/login/loginTemplate.
 		events : {
 			"click .btn-acesse-sua-conta" : 'go_login_with_account',
 			"click .btn-cancelar" : 'cancel_login_with_account',
-			"click .login_with_account_submit" : 'login_with_account_submit'
+			"click .login_with_account_submit" : 'login_with_account_submit',
+			"click .sign_in" : "go_sign_up_form"
 		},
 
+		go_sign_up_form: function(){
+			Backbone.Router.prototype.navigate("sign_in", {
+				trigger : true,
+				replace : true
+			}); 	
+		},
+		
 		go_login_with_account : function() {
 			this.$el.html(loginWithAccount);
 		},
@@ -33,7 +42,6 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/login/loginTemplate.
 				return;
 			}
 			
-			loader('show');
 			sign_in(user, pass);
 			
 		},
