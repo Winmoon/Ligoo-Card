@@ -20,7 +20,6 @@ signin_with_facebook = function() {
 	/*
 	 app.userData = localStorage.getItem("userData");
 	 app.userData = JSON.parse(app.userData);
-
 	 //TODO verificar se realmente vai precisar
 	 if( typeof app.userData != "undefined" && app.userData != null && app.userData.id)
 	 app.userLoggedIn = true;
@@ -30,8 +29,10 @@ signin_with_facebook = function() {
 
 		console.log("response FB");
 		console.log(response);
-		if(response.authResponse) {
-			$.getJSON(url("users/auth/facebook/callback") + "?" + $.param({	signed_request : response.authResponse.signedRequest}), {
+		if (response.authResponse) {
+			$.getJSON(url("users/auth/facebook/callback") + "?" + $.param({
+				access_token : response.authResponse.accessToken
+			}), {
 				dataType : "json",
 				crossDomain : true,
 				xhrFields : {
@@ -39,15 +40,16 @@ signin_with_facebook = function() {
 				}
 			}, function(json) {
 				console.log(json);
-			});
 
-			loader('hide');
-			localStorage.setItem("userData", JSON.stringify(response.authResponse));
-			app.userLoggedIn = true;
+				loader('hide');
+				localStorage.setItem("userData", JSON.stringify(json));
+				app.userLoggedIn = true;
 
-			Backbone.Router.prototype.navigate("welcome", {
-				trigger : true,
-				replace : true
+				Backbone.Router.prototype.navigate("welcome", {
+					trigger : true,
+					replace : true
+				});
+
 			});
 
 		}
@@ -68,7 +70,7 @@ sign_in = function(user, pass) {
 			password : pass
 		}
 	}, function(data) {
-		if(data.id) {
+		if (data.id) {
 
 			localStorage.setItem("userData", JSON.stringify(data));
 
@@ -88,7 +90,7 @@ sign_in = function(user, pass) {
 
 sign_up = function(form) {
 
-	if(!checkMandatories(form)) {
+	if (!checkMandatories(form)) {
 
 		var userDataArray = $("input", form).serializeArray();
 
@@ -101,7 +103,7 @@ sign_up = function(form) {
 		$.post(url("user/users.json"), {
 			user : userData
 		}, function(data) {
-			if(data.id) {
+			if (data.id) {
 
 				localStorage.setItem("userData", JSON.stringify(data));
 
@@ -119,7 +121,7 @@ update_profile = function(form) {
 
 	loader("show");
 
-	if(!checkMandatories(form)) {
+	if (!checkMandatories(form)) {
 
 		var userDataArray = $("input", form).serializeArray();
 
@@ -132,7 +134,7 @@ update_profile = function(form) {
 		$.post(url("user/api/update_profile.json"), {
 			user : userData,
 		}, function(data) {
-			if(data.id)
+			if (data.id)
 				localStorage.setItem("userData", JSON.stringify(data));
 
 			alert("Dados atualizados com sucesso");
@@ -207,7 +209,7 @@ like_establishment = function(establishment, cb) {
 
 	$.get(url("user/api/" + establishment + "/like.json")).complete(function(data) {
 
-		if(cb)
+		if (cb)
 			cb(data);
 	});
 };
