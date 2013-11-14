@@ -1,0 +1,28 @@
+<div class="content" id="establishments-list-view">
+	{{#noHaveEstablishments}}
+	<div class="arrow_box_white txt-center">
+		<span class="txt-blue"> Não foi encontrado estabelecimentos cadastrados próximos a você.</span>
+		<br>
+		<span class="refresh"> Tentar novamente.</span>
+	</div>
+	<div class="logo">
+		<img src="./imgs/logo.png" />
+	</div>
+	{{/noHaveEstablishments}}
+	<div class="listview">
+		{{#establishments}}
+		<div class="item" data-establishment-id={{id}}>
+			<div class="icon pull-left" style="background-image: url('{{logo}}')"></div>
+			<div class="description text-shadow-white pull-left">
+				<div class="title">
+					{{name}}
+				</div>
+				<div>
+					{{distance}}
+				</div>
+			</div>
+		</div>
+		<hr class="separator" />
+		{{/establishments}}
+	</div>
+</div>

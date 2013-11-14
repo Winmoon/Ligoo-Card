@@ -1,0 +1,35 @@
+<div class="content" id="news-view">
+	{{#noHaveNews}}
+	<div class="arrow_box_white txt-center">
+		<span class="txt-blue"> Olá, ainda não temos nenhuma novidade para você.</span>
+		<br>
+		Fique atento, em breve teremos grandes novidades por aqui.
+		<br>
+		<br>
+	</div>
+	<div class="logo">
+		<img src="./imgs/logo.png" />
+	</div>
+	{{/noHaveNews}}	
+	{{#news}}
+	<div class="news-post-box">
+		<div class="news-post-header">
+			<div class="icon pull-left" style="background-image: url('{{establishment.logo_urls.thumb}}')"></div>
+			<div class="description pull-left">
+				<div class="title">
+					{{establishment.name}}
+				</div>
+				<div class="address">
+					{{establishment.address}}
+				</div>
+			</div>
+		</div>
+		<div class="arrow_box">
+			<div class="message">
+				{{news}}
+			</div>
+		</div>
+		<hr class="separator" />
+	</div>
+	{{/news}}
+</div>
