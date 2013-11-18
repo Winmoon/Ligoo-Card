@@ -5,12 +5,12 @@
 	<meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, target-densitydpi=1.0"/>
 	<link rel="stylesheet" href="css/normalize.css">
 	<link rel="stylesheet" href="css/style.css">
-	<script src="http://localhost:8080/target/target-script-min.js#anonymous"></script>
 	<script src="cordova.js"></script>
 	<!-- cordova facebook plugin -->
 	<script src="cdv-plugin-fb-connect.js"></script>
 	<!-- facebook js sdk -->
 	<script src="facebook-js-sdk.js"></script>
+	<script src="barcodescanner.js"></script>
 	<script src="i8n.js"></script>
 	<script data-main="js/main" src="js/libs/require/require.js"></script>
 	<script src="js/utils.js"></script>
@@ -39,14 +39,14 @@
 						Ao redor
 					</div>
 				</div> </a>
-				<a href="#call_qrcode">
+				<a onclick="create_point()">
 				<div class="button pontuar pull-left btn-large">
 					<img src="imgs/tab-icon-pontuar.png" />
 					<div class="label">
 						Pontuar
 					</div>
 				</div> </a>
-				<a href="#news">
+				<a href="#news" style="position: relative; left: 3px;">
 				<div class="button novidades pull-left">
 					<img src="imgs/tab-icon-novidades.png" />
 					<div class="label">
@@ -63,18 +63,9 @@
 			</div>
 		</div>
 	</div>
-	<!-- <div class="popup">
-	<div class="popup-header-effect"></div>
-	<div class="popup-header">LIGOOCARD</div>
-	<div class="popup-content">
-	Parabéns, você adicionou um cartão a sua conta. Agora basta juntar pontos e curtir bons momentos.
-	</div>
-	<div class="popup-footer">
-	<button class="popup-button-ok">Ok</button>
-	</div>
-	</div>
-	<div class="popup-cover"></div> -->
 </body>
+<!-- <script src="http://localhost:8080/target/target-script-min.js#anonymous"></script> -->
+<!-- <script src="http://192.168.2.8:8080/target/target-script-min.js#anonymous"></script> -->
 <link rel="stylesheet" href="css/lollipop.css">
 <link rel="stylesheet" href="css/animate.min.css">
 </html>

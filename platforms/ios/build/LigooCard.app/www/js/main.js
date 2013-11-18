@@ -8,28 +8,28 @@ require.config({
 		blockui : 'libs/jquery/blockui',
 		mustache : 'libs/jquery/mustache',
 		fastclick : 'libs/fastclick',
-		lollipop: 'libs/jquery/lollipop',
-		base64: 'libs/base64',
-		mobile: 'libs/mobile', //TODO verificar se será retirado
-		animate_loader: 'libs/animate_loader'
+		lollipop : 'libs/jquery/lollipop',
+		base64 : 'libs/base64',
+		mobile : 'libs/mobile', //TODO verificar se será retirado
+		animate_loader : 'libs/animate_loader'
 	},
 	shim : {
 		base64 : {
-			deps: ['jquery']
+			deps : ['jquery']
 		},
 		mobile : {
-			deps: ['base64','jquery']
+			deps : ['base64', 'jquery']
 		},
 		mustache : {
-			deps: ['jquery']
+			deps : ['jquery']
 		},
 		blockui : {
-			deps: ['jquery']
+			deps : ['jquery']
 		},
-		lollipop: {
-			deps: ['jquery']
+		lollipop : {
+			deps : ['jquery']
 		}
-	}	
+	}
 });
 
 require([
@@ -37,5 +37,21 @@ require([
 'app', 'jquery', 'fastclick', 'mustache', 'blockui', 'lollipop', 'base64', 'mobile', 'animate_loader'], function(App) {
 	// The "app" dependency is passed in as "App"
 	// Again, the other dependencies passed in are not "AMD" therefore don't pass a parameter to this function
+
+	$.ajaxSetup({
+		statusCode : {
+			401 : function() {
+				// Redirec the to the login page.
+				Backbone.Router.prototype.navigate("login", {
+					trigger : true,
+					replace : true
+				});
+
+				loader('hide');
+
+			}
+		}
+	});
+
 	App.initialize();
 });

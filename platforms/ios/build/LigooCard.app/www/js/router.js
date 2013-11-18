@@ -28,17 +28,19 @@ define(['jquery', 'underscore', 'backbone', 'views/login/LoginView',
 
 		app_router.on('route:defaultAction', function(actions) {
 			
-			if(app.userLoggedIn === false)
-			app_router.navigate("login", {
-				trigger : true,
-				replace : true
-			});
+			
+			if (app.userLoggedIn === false)
+				app_router.navigate("login", {
+					trigger : true,
+					replace : true
+				});
 			else {
 				app_router.navigate("welcome", {
-				trigger : true,
-				replace : true
-			});
+					trigger : true,
+					replace : true
+				});
 			}
+
 		});
 		
 		app_router.on('route:me', function() {

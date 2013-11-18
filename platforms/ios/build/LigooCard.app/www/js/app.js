@@ -2,7 +2,7 @@ app = {};
 
 function alert(msg) {
 
-	if( typeof navigator.notification != "undefined")
+	if ( typeof navigator.notification != "undefined")
 		navigator.notification.alert(msg, null, "Alert", "OK");
 	else
 		console.log(msg);
@@ -13,23 +13,23 @@ function checkMandatories(form) {
 	var haveMandatories = 0;
 
 	$("[rel*='mandatory']", form).each(function() {
-		if(this.value == "") {
-			if(this.tagName == "INPUT")
+		if (this.value == "") {
+			if (this.tagName == "INPUT")
 				$(this).addClass("mandatory");
 			else
 				$(this).addClass("mandatory");
 
 			haveMandatories++;
 		} else {
-			if(this.tagName == "INPUT")
+			if (this.tagName == "INPUT")
 				$(this).removeClass("mandatory");
 			else
 				$(this).removeClass("mandatory");
 		}
 	});
 
-	if(haveMandatories > 0) {
-		if( typeof navigator.notification != "undefined")
+	if (haveMandatories > 0) {
+		if ( typeof navigator.notification != "undefined")
 			navigator.notification.alert('Campos obrigatórios não podem estar em branco', null, 'Erro', 'OK');
 		else
 			alert('Campos obrigatórios não podem estar em branco');
@@ -68,10 +68,10 @@ function popup(msg, options) {
 
 function showAppHeaderFooter(h, f) {
 
-	if(h === true)
+	if (h === true)
 		$("#page .header").show();
 
-	if(f === true)
+	if (f === true)
 		$("#page #footer").show();
 
 	$(".page-wrapper").removeClass("remove-footer");
@@ -80,10 +80,10 @@ function showAppHeaderFooter(h, f) {
 
 function hideAppHeaderFooter(h, f) {
 
-	if(h === true)
+	if (h === true)
 		$("#page .header").hide();
 
-	if(f === true) {
+	if (f === true) {
 		$("#page #footer").hide();
 		$(".page-wrapper").addClass("remove-footer");
 	}
@@ -94,10 +94,10 @@ function loader(visibility) {
 
 	new imageLoader(cImageSrc, 'startAnimation()');
 
-	if(visibility == "hide") {
+	if (visibility == "hide") {
 		$.unblockUI();
 		stopAnimation();
-	} else if(visibility == "show") {
+	} else if (visibility == "show") {
 		$.blockUI({
 			message : "<div id='loaderImage'></div>",
 			css : {
@@ -113,7 +113,7 @@ function loader(visibility) {
 
 function blockUI(msg, timeout) {
 
-	if(!msg)
+	if (!msg)
 		msg = "";
 
 	$.blockUI({
@@ -157,7 +157,7 @@ function getCoords(cb) {
 		console.log(s);
 		app.userCoord = [s.coords.latitude, s.coords.longitude];
 
-		if(cb)
+		if (cb)
 			cb();
 
 	};
@@ -165,6 +165,7 @@ function getCoords(cb) {
 	var error = function(e) {
 		console.log("E");
 		alert("No getCoords");
+		loader("hide");
 	};
 
 	navigator.geolocation.getCurrentPosition(success, error);
@@ -179,7 +180,7 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 		new FastClick(document.body);
 
 		Backbone.View.prototype.close = function() {
-			if(this.beforeClose) {
+			if (this.beforeClose) {
 				this.beforeClose();
 			}
 			this.unbind();
@@ -191,19 +192,26 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 			compiledTemplates : {},
 			loadTemplate : function(templName, tmpl) {
 
-				if(!app.compiledTemplates[templName])
+				if (!app.compiledTemplates[templName])
 					app.compiledTemplates[templName] = Mustache.compile(tmpl);
 
 				return app.compiledTemplates[templName];
 			}
 		};
 
-		app.userData = localStorage.getItem("userData");
-		app.userData = JSON.parse(app.userData);
+		get_points(function(data) {
 
-		//TODO verificar se realmente vai precisar
-		if( typeof app.userData != "undefined" && app.userData != null && app.userData.id)
-			app.userLoggedIn = true;
+			var _data = JSON.parse(data.status);
+
+			if (_data.status == 401)
+				Backbone.Router.prototype.navigate("login", {
+					trigger : true,
+					replace : true
+				});
+			else
+				app.userLoggedIn = true;
+
+		});
 
 		FB.init({
 			appId : "183318471871083",

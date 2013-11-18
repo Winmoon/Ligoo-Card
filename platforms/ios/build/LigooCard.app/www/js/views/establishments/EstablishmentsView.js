@@ -12,6 +12,7 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 			showAppHeaderFooter(true, true);
 			loader('show');
 			this.$el.html("");
+			this.$el.unbind();
 		},
 
 		showView : function(id) {
@@ -27,7 +28,7 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 					_this.pointsEarned = 0;
 					$(_this.points).each(function() {
 
-						if(this.establishment_id == _this.options.id)
+						if (this.establishment_id == _this.options.id)
 							_this.pointsEarned++;
 					});
 
@@ -50,7 +51,7 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 							this.valid_until = parseDate(this.valid_until);
 							this.percentage = (_this.model.establishment.totalPoints * 100) / this.points + "%";
 
-							if(parseInt(this.percentage) >= 100) {
+							if (parseInt(this.percentage) >= 100) {
 								havePremiuns = true;
 								this.wonPremiumClass = "won-premium";
 							}
@@ -60,7 +61,7 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 						// padrao usuario ainda nao gostou do estabelecimento
 
 						$(_this.model.establishment.likes).each(function() {
-							if(app.userData.id === this.user_id)
+							if (app.userData.id === this.user_id)
 								_this.model.establishment.liked = "Já curti!";
 						});
 
@@ -68,7 +69,7 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 						_this.$el.html(_this.templateOutput);
 						loader('hide');
 
-						if(havePremiuns === true)
+						if (havePremiuns === true)
 							popup(messages.premiumWon);
 
 					});
@@ -88,16 +89,39 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 
 		refresh : function() {
 			establishmentsView.initialize();
-			establishmentsView.list();
+			establishmentsView.showView(this.options.id);
 		},
 
 		won_coupon_create_coupon : function(d) {
 			var id = $(d.currentTarget).data("promotion-id");
+			var el = $(d.currentTarget);
 
-			if(confirm("Esta operação deve ser realizada no estabelecimento, caso contrário, poderá perder seus pontos. Deseja prosseguir?"))
-				create_coupon(id, function(data) {
-					console.log(data);
+			var _this = this;
+
+			if (confirm("Esta operação deve ser realizada no estabelecimento, caso contrário, poderá perder seus pontos. Deseja prosseguir?")) {
+
+				barcodeScanner.scan(function(r) {
+
+					var establishment_qrcode = r.text;
+
+					create_coupon(id, function(data) {
+						var response = JSON.parse(data.responseText);
+
+						check_coupon(response.id, establishment_qrcode, function(data) {
+							popup(messages.premiumConsumed + "<br><br> Código do cupom/prêmio: " + response.id);
+							el.find(".points-to-win.won-premium").animate({
+								width : "0%"
+							}, 750);
+							el.removeClass("won-premium");
+							el.unbind();
+							_this.refresh();
+						});
+
+					});
+
 				});
+
+			}
 		},
 
 		like_counter : function() {
@@ -108,11 +132,10 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 
 				var response = JSON.parse(data.responseText);
 
-				if(response.user_id){
+				if (response.user_id) {
 					popup("Obrigado por gostar de nosso estabelecimento!");
-					$(".like-counter .counter").text(parseInt($(".like-counter .counter").text())+1);
-				}
-				else
+					$(".like-counter .counter").text(parseInt($(".like-counter .counter").text()) + 1);
+				} else
 					popup("Muito obrigado por gostar tanto de nós, porém, você pode curtir apenas uma vez.");
 
 				loader('hide');

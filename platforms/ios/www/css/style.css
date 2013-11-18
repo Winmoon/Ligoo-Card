@@ -93,7 +93,6 @@ input, textarea, select {
 .login-separator {
 	border: none;
 	border-top: 1px solid #ACAEB3;
-	border-bottom: 1px solid white;
 	width: 90%;
 	position: relative;
 	top: 50px;
@@ -662,6 +661,20 @@ input {
 	margin-top: -7px;
 }
 
+
+#profile-form label {
+  display: inline;
+  float: left;
+  font-size: 12px;
+}
+
+#profile-form input{
+	float: left;
+	margin-bottom: 5px;
+	border-radius: 0px;
+	-webkit-border-radius: 0px;
+}
+
 /*.popup-cover {
   background: none repeat scroll 0 0 rgba(100, 100, 100, 0.5);
   height: 100%;
@@ -743,7 +756,6 @@ and (min-device-width : 320px)
 and (max-device-width : 568px) 
 and (orientation : portrait) { /* STYLES GO HERE */ 
 	
-	.btn-large{width: };
 	
 	
 }
