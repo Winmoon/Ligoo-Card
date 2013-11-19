@@ -7,6 +7,7 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 		templateOutput : "",
 		coupons : {},
 		points : {},
+		viewing : "",
 
 		initialize : function() {
 			showAppHeaderFooter(true, true);
@@ -16,6 +17,8 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 		},
 
 		showView : function(id) {
+			this.viewing = "showview";
+			
 			this.$headerTitle.html("Estabelecimento");
 
 			_this = this;
@@ -157,6 +160,8 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 		},
 
 		list : function() {
+			
+			this.viewing = "listview";
 
 			this.$headerTitle.html("Próximos a mim");
 

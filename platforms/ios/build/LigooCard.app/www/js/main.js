@@ -38,20 +38,5 @@ require([
 	// The "app" dependency is passed in as "App"
 	// Again, the other dependencies passed in are not "AMD" therefore don't pass a parameter to this function
 
-	$.ajaxSetup({
-		statusCode : {
-			401 : function() {
-				// Redirec the to the login page.
-				Backbone.Router.prototype.navigate("login", {
-					trigger : true,
-					replace : true
-				});
-
-				loader('hide');
-
-			}
-		}
-	});
-
 	App.initialize();
 });

@@ -1,7 +1,8 @@
 var create_coupon, create_point, get_coupons, get_establishment, get_establishments, get_near_establishments, get_news, get_points, get_profile, like_establishment, make_base_auth, root_url, sign_in, sign_up, update_profile, url;
 
-//root_url = "http://192.168.2.8:3000/";
-root_url = "http://localhost:3000/";
+// root_url = "http://192.168.2.9:3000/";
+// root_url = "http://localhost:3000/";
+root_url="http://ligoo-card.herokuapp.com/";
 
 url = function(url) {
 	return root_url + url;
@@ -153,16 +154,18 @@ update_profile = function(form) {
 
 create_point = function() {
 
-	barcodeScanner.scan(function(r) {
+	if ( typeof establishmentsView != "undefined" && establishmentsView.viewing == "showview") {
+		barcodeScanner.scan(function(r) {
 
-		$.get(url("user/api/" + r.text + "/point.json"), {
-			point_type : "qrcode"
-		}, function(data) {
-			popup(messages.pointAdded);
-			$(".establishment-total-points").text(parseInt($(".establishment-total-points").text()) + 1);
+			$.get(url("user/api/" + r.text + "/point.json"), {
+				point_type : "qrcode"
+			}, function(data) {
+				popup(messages.pointAdded);
+				$(".establishment-total-points").text(parseInt($(".establishment-total-points").text()) + 1);
+			});
+
 		});
-
-	});
+	}
 
 };
 
@@ -232,38 +235,38 @@ get_profile = function(cb) {
 	});
 };
 
-$(function() {
-	$.ajaxSetup({
-		dataType : "json",
-		crossDomain : true,
-		xhrFields : {
-			withCredentials : true
-		},
-		statusCode : {
-			403 : function(d) {
-
-				var data = JSON.parse(d.responseText);
-
-				alert(data.error);
-
-				Backbone.Router.prototype.navigate("login", {
-					trigger : true,
-					replace : true
-				});
-
-				loader('hide');
-			},
-			400 : function(error) {
-				return alert("Não passou na validação: " + error.responseText);
-			},
-			422 : function(error) {
-				return alert("Não passou na validação: " + error.responseText);
-			}
-		}
-	});
-
-	// get_news();
-	// get_profile();
-	// update_profile();
-	// return get_profile();
-});
+// $(function() {
+	// $.ajaxSetup({
+		// dataType : "json",
+		// crossDomain : true,
+		// xhrFields : {
+			// withCredentials : true
+		// },
+		// statusCode : {
+			// 403 : function(d) {
+// 
+				// var data = JSON.parse(d.responseText);
+// 
+				// alert(data.error);
+// 
+				// Backbone.Router.prototype.navigate("login", {
+					// trigger : true,
+					// replace : true
+				// });
+// 
+				// loader('hide');
+			// },
+			// 400 : function(error) {
+				// return alert("Não passou na validação: " + error.responseText);
+			// },
+			// 422 : function(error) {
+				// return alert("Não passou na validação: " + error.responseText);
+			// }
+		// }
+	// });
+// 
+	// // get_news();
+	// // get_profile();
+	// // update_profile();
+	// // return get_profile();
+// });

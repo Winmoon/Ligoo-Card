@@ -224,6 +224,46 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 			oauth : true
 		});
 
+		$.ajaxSetup({
+			dataType : "json",
+			crossDomain : true,
+			xhrFields : {
+				withCredentials : true
+			},
+			statusCode : {
+				403 : function(d) {
+
+					var data = JSON.parse(d.responseText);
+
+					alert(data.error);
+
+					Backbone.Router.prototype.navigate("login", {
+						trigger : true,
+						replace : true
+					});
+
+					loader('hide');
+				},
+				
+				401 : function(d) {
+					
+					var data = JSON.parse(d.responseText);
+
+					alert(data.error);
+
+					loader('hide');
+					
+				},
+				
+				400 : function(error) {
+					return alert("Não passou na validação: " + error.responseText);
+				},
+				422 : function(error) {
+					return alert("Não passou na validação: " + error.responseText);
+				}
+			}
+		});
+
 		Router.initialize();
 
 	};
