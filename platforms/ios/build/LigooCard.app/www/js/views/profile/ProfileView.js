@@ -24,6 +24,9 @@ define(['jquery', 'underscore', 'mustache', 'backbone', 'text!templates/profile/
 
 				if(_this.model.birth_date != null)
 					_this.model.birth_date = parseDate(_this.model.birth_date);
+					
+				_this.model.maleCheck = _this.model.gender == "M" ? "checked" : "";
+				_this.model.femCheck = _this.model.gender == "F" ?  "checked" : "";
 
 				_this.templateOutput = app.loadTemplate("me", profileTemplate)(_this.model);
 				_this.$el.html(_this.templateOutput);
@@ -37,11 +40,16 @@ define(['jquery', 'underscore', 'mustache', 'backbone', 'text!templates/profile/
 		},
 		
 		events : {
-			"click .btn-atualizar-profile" : 'profile_update'
+			"click .btn-atualizar-profile" : 'profile_update',
+			"click .btn-fazer-logout" : 'logout'
 		},
 
 		profile_update : function() {
 			update_profile("#profile-form");
+		},
+		
+		logout : function() {
+			//update_profile("#profile-form");
 		}
 
 	});

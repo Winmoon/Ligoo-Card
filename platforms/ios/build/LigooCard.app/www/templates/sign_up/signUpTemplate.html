@@ -1,14 +1,29 @@
 <div class="content" id="signup-view">
 	<form id="signup-form" onsubmit="return false" class="txt-center">
 		<input type="hidden" name="remember_me" value="1" />
-		
+
 		<input name="name" rel="mandatory" placeholder="Nome completo" type="text"/>
-		<br><br>
+		<br>
+		<br>
 
 		<div class="input_vertical_group">
-			<input name="phone" rel="" type="tel" placeholder="Telefone"/>
+			<input name="phone" rel="" type="tel" placeholder="Telefone (xx) xxxx-xxxx"/>
 			<input name="birth_date" rel="mandatory" type="text" placeholder="Data de nascimento (dd/mm/aaaa)"/>
 			<input name="email" rel="mandatory" placeholder="E-mail" type="email"/>
+			<div rel="mandatory radio" class="radio-contents">
+				<span class="label">Sexo</span>
+				<span class="inputs">
+					<span>Masculino</span>
+						<span style="float: right;">
+							<input class="radio-shadow-blue" type="radio" name="gender" value="M">
+						</span>
+					</span>
+					<span>Feminino</span>
+						<span style="float: right;">
+							<input class="radio-shadow-pink" type="radio" name="gender" value="F">
+						</span>
+					</span>
+			</div>
 			<input name="password" rel="mandatory" type="password" placeholder="Senha"/>
 			<input name="password_confirmation" rel="mandatory" type="password" placeholder="Confirmar senha"/>
 		</div>

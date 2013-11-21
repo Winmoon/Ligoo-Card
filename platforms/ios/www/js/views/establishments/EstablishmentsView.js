@@ -41,6 +41,8 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 						_this.model = {
 							establishment : JSON.parse(data.responseText)
 						};
+						
+						_this.model.establishment.id = _this.options.id;
 
 						img_url_prefix = root_url.substring(0, root_url.length - 1);
 
@@ -67,6 +69,12 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 							if (app.userData.id === this.user_id)
 								_this.model.establishment.liked = "Já curti!";
 						});
+						
+						_this.model.establishment.lovelly = "";
+						if(_this.model.establishment.likes_count > 1)
+							_this.model.establishment.lovelly = "gostaram";
+						else
+							_this.model.establishment.lovelly = "gostou";
 
 						_this.templateOutput = app.loadTemplate("establishments_show", showViewTemplate)(_this.model.establishment);
 						_this.$el.html(_this.templateOutput);

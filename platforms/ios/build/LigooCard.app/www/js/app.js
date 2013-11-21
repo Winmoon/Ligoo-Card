@@ -1,12 +1,10 @@
 app = {};
 
-function alert(msg) {
+document.addEventListener("deviceready", function(e) {
+	navigator.splashscreen.hide();
+}, "false");
 
-	if ( typeof navigator.notification != "undefined")
-		navigator.notification.alert(msg, null, "Alert", "OK");
-	else
-		console.log(msg);
-}
+window.alert = navigator.notification.alert;
 
 function checkMandatories(form) {
 
@@ -28,12 +26,26 @@ function checkMandatories(form) {
 		}
 	});
 
-	if (haveMandatories > 0) {
-		if ( typeof navigator.notification != "undefined")
-			navigator.notification.alert('Campos obrigatórios não podem estar em branco', null, 'Erro', 'OK');
-		else
-			alert('Campos obrigatórios não podem estar em branco');
+	$("[rel*='mandatory radio']", "#signup-form").each(function() {
+		var el = $(this);
 
+		var radiusCount = $(this).find("[type='radio']").length;
+
+		var countUncheckeds = 0;
+
+		$(this).find("[type='radio']").each(function() {
+			if (!this.checked)
+				countUncheckeds++;
+		});
+
+		if (countUncheckeds > radiusCount - 1)
+			el.addClass("mandatory");
+		else
+			el.removeClass("mandatory");
+	});
+
+	if (haveMandatories > 0) {
+			alert('Campos obrigatórios não podem estar em branco', null, "Erro", "OK");
 		return true;
 	}
 
@@ -183,6 +195,7 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 			if (this.beforeClose) {
 				this.beforeClose();
 			}
+			this.$el.unbind();
 			this.unbind();
 			this.remove();
 		};
@@ -244,17 +257,17 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 
 					loader('hide');
 				},
-				
+
 				401 : function(d) {
-					
+
 					var data = JSON.parse(d.responseText);
 
 					alert(data.error);
 
 					loader('hide');
-					
+
 				},
-				
+
 				400 : function(error) {
 					return alert("Não passou na validação: " + error.responseText);
 				},
