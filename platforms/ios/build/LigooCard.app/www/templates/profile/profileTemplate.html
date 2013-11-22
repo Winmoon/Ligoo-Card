@@ -1,3 +1,7 @@
+<div class="header" style="display: block;">
+	<span class="title">Meu perfil</span>
+	<div onclick="profileView.logout()" class="btn-fazer-logout"></div>
+</div>
 <div class="content left" id="profile-view">
 	<form id="profile-form" onsubmit="return false" class="txt-center">
 		<input type="hidden" name="remember_me" value="1" />
@@ -13,11 +17,12 @@
 			<input name="email" rel="mandatory" placeholder="E-mail" type="email" value="{{email}}"/>
 		</div>
 		<label style="margin-right: 10px;">Sexo</label>
-		<label>Masculino</label><input class="radio-shadow-blue" type="radio" name="gender" {{maleCheck}} value="M">&nbsp;&nbsp;&nbsp;
-		<label style="margin-left: 5px;">Feminino</label> <input class="radio-shadow-pink" type="radio" name="gender" {{femCheck}} value="F">
+		<label>Masculino</label>
+		<input class="radio-shadow-blue" type="radio" name="gender" {{maleCheck}} value="M">
+		&nbsp;&nbsp;&nbsp; <label style="margin-left: 5px;">Feminino</label>
+		<input class="radio-shadow-pink" type="radio" name="gender" {{femCheck}} value="F">
 		<div class="buttons_group" style="top: 28px;">
 			<img src="./imgs/btn-atualizar.png" class="btn-atualizar-profile" />
-			<div class="btn-fazer-logout">Logout</div>
 		</div>
 	</form>
 </div>

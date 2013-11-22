@@ -43,7 +43,7 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/login/loginTemplate.
 			var pass = $("#login-with-account-form #senha").val();
 
 			if($.trim(user) == "" || $.trim(pass) == "") {
-				alert("Email ou senha não informados, por favor verifique!");
+				alert("Email ou senha não informados, por favor verifique!", null, "Erro ao fazer login");
 				return;
 			}
 			

@@ -28,6 +28,9 @@ require.config({
 		},
 		lollipop : {
 			deps : ['jquery']
+		},
+		app : {
+			deps : ['jquery','lollipop']
 		}
 	}
 });

@@ -18,7 +18,7 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 
 		showView : function(id) {
 			this.viewing = "showview";
-			
+
 			this.$headerTitle.html("Estabelecimento");
 
 			_this = this;
@@ -41,13 +41,20 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 						_this.model = {
 							establishment : JSON.parse(data.responseText)
 						};
-						
+
 						_this.model.establishment.id = _this.options.id;
 
 						img_url_prefix = root_url.substring(0, root_url.length - 1);
 
-						_this.model.establishment.logo = img_url_prefix + _this.model.establishment.logo_urls.thumb;
-						_this.model.establishment.cover = img_url_prefix + _this.model.establishment.cover;
+						
+						if(root_url == "http://localhost:3000/"){
+							_this.model.establishment.logo = img_url_prefix + _this.model.establishment.logo_urls.thumb;
+							_this.model.establishment.cover = img_url_prefix + _this.model.establishment.cover;
+						}
+						else {
+							_this.model.establishment.logo = _this.model.establishment.logo_urls.thumb;
+							_this.model.establishment.cover = _this.model.establishment.cover;
+						}
 						_this.model.establishment.totalPoints = _this.pointsEarned;
 
 						havePremiuns = false;
@@ -69,9 +76,9 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 							if (app.userData.id === this.user_id)
 								_this.model.establishment.liked = "Já curti!";
 						});
-						
+
 						_this.model.establishment.lovelly = "";
-						if(_this.model.establishment.likes_count > 1)
+						if (_this.model.establishment.likes_count > 1)
 							_this.model.establishment.lovelly = "gostaram";
 						else
 							_this.model.establishment.lovelly = "gostou";
@@ -103,14 +110,38 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 			establishmentsView.showView(this.options.id);
 		},
 
+		updateBarPremiuns : function(points) {
+			havePremiuns = false;
+
+			establishmentsView.model.establishment.totalPoints+=points;
+
+			$(establishmentsView.model.establishment.promotions).each(function() {
+
+				this.percentage = (establishmentsView.model.establishment.totalPoints * 100) / this.points + "%";
+
+				establishmentsView.$el.find("#establishments-show-view .ofertas-item[data-promotion-id=" + this.id + "] .points-to-win").css("width", this.percentage);
+
+				if (parseInt(this.percentage) >= 100) {
+					havePremiuns = true;
+					this.wonPremiumClass = "won-premium";
+
+					establishmentsView.$el.find("#establishments-show-view .ofertas-item[data-promotion-id=" + this.id + "]").addClass(this.wonPremiumClass);
+					establishmentsView.$el.find("#establishments-show-view .ofertas-item[data-promotion-id=" + this.id + "] .points-to-win").addClass(this.wonPremiumClass);
+
+				}
+			});
+
+			if (havePremiuns)
+				popup(messages.premiumWon);
+		},
+
 		won_coupon_create_coupon : function(d) {
 			var id = $(d.currentTarget).data("promotion-id");
 			var el = $(d.currentTarget);
 
 			var _this = this;
 
-			if (confirm("Esta operação deve ser realizada no estabelecimento, caso contrário, poderá perder seus pontos. Deseja prosseguir?")) {
-
+			var cb = function() {
 				barcodeScanner.scan(function(r) {
 
 					var establishment_qrcode = r.text;
@@ -131,8 +162,13 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 					});
 
 				});
+			};
 
-			}
+			navigator.notification.confirm("Esta operação deve ser realizada no estabelecimento, caso contrário, poderá perder seus pontos. Deseja prosseguir?", function(b){
+				if(b == 1)
+					cb();
+			}, "Atenção!");
+
 		},
 
 		like_counter : function() {
@@ -168,7 +204,7 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 		},
 
 		list : function() {
-			
+
 			this.viewing = "listview";
 
 			this.$headerTitle.html("Próximos a mim");
@@ -189,7 +225,12 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 						img_url_prefix = root_url.substring(0, root_url.length - 1);
 
 						$(_this.model.establishments).each(function() {
-							this.logo = img_url_prefix + this.logo_urls.thumb;
+							
+							if(root_url == "http://localhost:3000/"){
+								this.logo = img_url_prefix + this.logo_urls.thumb;
+							}
+							else 
+								this.logo = this.logo_urls.thumb;
 
 							this.distance = Math.round(this.distance) + "Km";
 

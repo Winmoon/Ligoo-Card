@@ -4,7 +4,8 @@ document.addEventListener("deviceready", function(e) {
 	navigator.splashscreen.hide();
 }, "false");
 
-window.alert = navigator.notification.alert;
+//if (navigator.device.available == true)
+	window.alert = navigator.notification.alert;
 
 function checkMandatories(form) {
 
@@ -45,7 +46,7 @@ function checkMandatories(form) {
 	});
 
 	if (haveMandatories > 0) {
-			alert('Campos obrigatórios não podem estar em branco', null, "Erro", "OK");
+		alert('Campos obrigatórios não podem estar em branco', null, "Erro");
 		return true;
 	}
 
@@ -163,6 +164,8 @@ function prompt(message, cb, title, buttons, defaultTxt) {
 function getCoords(cb) {
 
 	app.userCoord = false;
+	
+	var _cb = cb;
 
 	var success = function(s) {
 		console.log("s");
@@ -175,8 +178,12 @@ function getCoords(cb) {
 	};
 
 	var error = function(e) {
-		console.log("E");
-		alert("No getCoords");
+		
+		navigator.notification.confirm("Não consegui pegar sua localização, por favor verifique: \n\n - Se está permitido o aplicativo a usar dados de localização. \n - Se está ativado o serviço de localização"
+		, function(b){
+			if(b == 2)
+				getCoords(_cb);
+		}, "Erro", "Ok, Tentar novamente");
 		loader("hide");
 	};
 
@@ -192,14 +199,13 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 		new FastClick(document.body);
 
 		Backbone.View.prototype.close = function() {
-			if (this.beforeClose) {
-				this.beforeClose();
-			}
-			this.$el.unbind();
-			this.unbind();
 			this.remove();
-		};
-
+			this.unbind();
+			this.$el.unbind();
+			if (this.onClose) {
+				this.onClose();
+			}
+		}
 		app = {
 			userLoggedIn : false,
 			compiledTemplates : {},
@@ -245,34 +251,23 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 			},
 			statusCode : {
 				403 : function(d) {
-
 					var data = JSON.parse(d.responseText);
-
-					alert(data.error);
-
+					alert(data.error, null, "Erro");
 					Backbone.Router.prototype.navigate("login", {
 						trigger : true,
 						replace : true
 					});
-
 					loader('hide');
 				},
 
 				401 : function(d) {
-
 					var data = JSON.parse(d.responseText);
-
-					alert(data.error);
-
+					alert(data.error, null, "Erro");
 					loader('hide');
-
 				},
-
 				400 : function(error) {
-					return alert("Não passou na validação: " + error.responseText);
 				},
 				422 : function(error) {
-					return alert("Não passou na validação: " + error.responseText);
 				}
 			}
 		});

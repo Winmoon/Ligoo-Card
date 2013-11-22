@@ -98,15 +98,6 @@ define(['jquery', 'underscore', 'backbone', 'views/login/LoginView',
 			signUpView.render();
 		});
 
-		app_router.on('route:alertview', function(type) {
-
-			alertView = new AlertView({
-				type : type
-			});
-			alertView.render();
-
-		});
-
 		Backbone.history.start();
 	};
 	return {

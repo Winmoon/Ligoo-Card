@@ -396,6 +396,8 @@ input {
 	position: relative;
 	top: 53px;
 	z-index: 1;
+	background-size: cover;
+	-webkit-background-size: cover;
 }
 
 .establishment-top .icon {
@@ -827,4 +829,20 @@ input.radio-shadow-blue:checked{
 input.radio-shadow-pink:checked{
 	box-shadow: inset 0px 0px 0px 20px pink !important;
 	-webkit-box-shadow: inset 0px 0px 0px 20px pink !important;
+}
+
+.btn-fazer-logout {
+  background: url("../imgs/exit.png") no-repeat scroll 0 0 transparent;
+  float: right;
+  height: 23px;
+  margin-bottom: 15px;
+  margin-right: 11px;
+  margin-top: 15px;
+  width: 26px;
+}
+
+.establishment-top .address{
+	text-overflow: ellipsis;
+	overflow: hidden;
+	height: 15px;	
 }

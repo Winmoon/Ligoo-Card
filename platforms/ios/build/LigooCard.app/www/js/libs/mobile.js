@@ -2,8 +2,9 @@ var create_coupon, create_point, get_coupons, get_establishment, get_establishme
 
 //root_url = "http://192.168.2.19:3000/";
 // root_url = "http://localhost:3000/";
-root_url = "http://10.0.0.100:3000/";
-// root_url="http://ligoo-card.herokuapp.com/";
+// root_url = "http://10.0.0.102:3000/";
+// root_url = "http://10.0.0.100:3000/";
+root_url="http://ligoo-card.herokuapp.com/";
 
 url = function(url) {
 	return root_url + url;
@@ -78,6 +79,7 @@ signin_with_facebook = function() {
 		scope : "email, read_stream, publish_actions, publish_stream, user_birthday"
 	});
 }
+
 sign_in = function(user, pass) {
 	loader('show');
 
@@ -174,17 +176,23 @@ create_point = function() {
 	if ( typeof establishmentsView != "undefined" && establishmentsView.viewing == "showview") {
 		barcodeScanner.scan(function(r) {
 
+			loader("show");
+			
 			$.get(url("user/api/" + r.text + "/point.json"), {
 				point_type : "qrcode"
 			}, function(data) {
 
-				popup(messages.pointAdded);
+				establishmentsView.updateBarPremiuns(1);
+				
+				popup(messages.pointAdded);				
 				$(".establishment-total-points").text(parseInt($(".establishment-total-points").text()) + 1);
+				
+				loader("hide");
 
 				if (establishmentsView.model.establishment.share_points > 0) {
-					navigator.notification.confirm("Compartihe no facebook e ganhe " + establishmentsView.model.establishment.share_points + "ponto(s) a mais", function(d) {
+					navigator.notification.confirm("Compartihe no facebook e ganhe " + establishmentsView.model.establishment.share_points + " ponto(s) a mais", function(d) {
 						if (d == 1)
-							share_point("Acabei de ganhar mais " + establishmentsView.model.establishment.share_points + "ponto(s) no " + establishmentsView.model.establishment.name, establishmentsView.model.establishment.share_points, establishmentsView.model.id);
+							share_point("Acabei de ganhar mais " + establishmentsView.model.establishment.share_points + " ponto(s) no " + establishmentsView.model.establishment.name, establishmentsView.model.establishment.share_points, establishmentsView.model.establishment.id);
 					}, "Ganhe mais pontos!");
 				}
 			});
@@ -210,19 +218,14 @@ share_point = function(message, points, id) {
 			$.get(url("user/api/" + establishment_id + "/point.json"), {
 				point_type : "share"
 			}, function(data) {
-				popup(messages.pointAdded);
-				$(".establishment-total-points").text(parseInt($(".establishment-total-points").text()) + 1);
+				alert("OK, seu compartilhamento foi efetuado e você ganhou mais "+points+" ponto(s)", null, "Parabéns!");
+				
+				$(".establishment-total-points").text(parseInt($(".establishment-total-points").text()) + points);
+				
+				establishmentsView.updateBarPremiuns(points);
 
-				if (establishmentsView.model.establishment.share_points > 0) {
-					navigator.notification.confirm("Compartihe no facebook e ganhe " + establishmentsView.model.establishment.share_points + " ponto(s) a mais", function(d) {
-						if (d == 1)
-							share_point("Acabei de ganhar mais " + establishmentsView.model.establishment.share_points + "ponto(s) no " + establishmentsView.model.establishment.name, establishmentsView.model.establishment.share_points);
-					}, "Ganhe mais pontos!");
-				}
 			});
 
-			popup("Legal! Você ganhou mais " + points + " ponto(s) ao compartilhar no facebook");
-			$(".establishment-total-points").text(parseInt($(".establishment-total-points").text()) + point);
 		}
 	});
 };
