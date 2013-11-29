@@ -700,22 +700,54 @@ parentViewController:(UIViewController*)parentViewController
     {
         return [self buildOverlayViewFromXib];
     }
+    
     CGRect bounds = self.view.bounds;
     bounds = CGRectMake(0, 0, bounds.size.width, bounds.size.height);
     
     UIView* overlayView = [[[UIView alloc] initWithFrame:bounds] autorelease];
-    overlayView.autoresizesSubviews = YES;
-    overlayView.autoresizingMask    = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    overlayView.opaque              = NO;
+    
+    
+        // create a yellow background
+    
+        //overlayView.backgroundColor = [UIColor yellowColor];
+    
+        // create the layer on top of the yellow background that will be masked
+        CALayer *imageLayer = [CALayer layer];
+        imageLayer.frame = bounds;
+        imageLayer.backgroundColor = [[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.9] CGColor];
+        
+        // create the mask
+        CAShapeLayer *maskLayer = [CAShapeLayer layer];
+        maskLayer.fillRule = kCAFillRuleEvenOdd;
+        maskLayer.frame = self.view.frame;
+    
+    
+    CGRect inset = CGRectInset(bounds, 0, 0);
+    CGFloat rootViewHeight = CGRectGetHeight(bounds);
+    CGFloat rootViewWidth  = CGRectGetWidth(bounds);
+//    CGFloat minAxis = MIN(rootViewHeight, rootViewWidth);
+    
+    bounds = CGRectMake(0, 0, bounds.size.width, bounds.size.height - 140);
+    CGRect reader = CGRectInset(bounds, 40, 60);
+    
+    
+    CGMutablePathRef p1 = CGPathCreateMutable();
+    CGPathAddPath(p1, nil, CGPathCreateWithRect(reader, nil));
+    CGPathAddPath(p1, nil, CGPathCreateWithRect(inset, nil));
+    maskLayer.path = p1;
+    
+    // apply the mask to the layer on top of the yellow background
+    imageLayer.mask = maskLayer;
+    [overlayView.layer addSublayer:imageLayer];
     
     UIToolbar* toolbar = [[[UIToolbar alloc] init] autorelease];
     toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+
+    id btnCancel = [UIButton buttonWithType:UIButtonTypeCustom];
     
-    id cancelButton = [[[UIBarButtonItem alloc] autorelease]
-                       initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                       target:(id)self
-                       action:@selector(cancelButtonPressed:)
-                       ];
+    [btnCancel setFrame:CGRectMake(bounds.size.width / 2 - 42.5f, bounds.size.height - 50, 85.0f, 40.0f)];
+    [btnCancel addTarget:(id)self action:@selector(cancelButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [btnCancel setImage:[UIImage imageNamed:@"cancelar_verde.png"] forState:UIControlStateNormal];
     
     id flexSpace = [[[UIBarButtonItem alloc] autorelease]
                     initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
@@ -723,51 +755,57 @@ parentViewController:(UIViewController*)parentViewController
                     action:nil
                     ];
     
+    [overlayView addSubview: btnCancel];
+    
+
+
+
 #if USE_SHUTTER
     id shutterButton = [[UIBarButtonItem alloc]
                         initWithBarButtonSystemItem:UIBarButtonSystemItemCamera
                         target:(id)self
                         action:@selector(shutterButtonPressed)
                         ];
-    
-    toolbar.items = [NSArray arrayWithObjects:flexSpace,cancelButton,flexSpace,shutterButton,nil];
+
+    //toolbar.items = [NSArray arrayWithObjects:flexSpace,cancelButton,flexSpace,shutterButton,nil];
 #else
-    toolbar.items = [NSArray arrayWithObjects:flexSpace,cancelButton,flexSpace,nil];
+    //toolbar.items = [NSArray arrayWithObjects:flexSpace,cancelButton,flexSpace,nil];
 #endif
     bounds = overlayView.bounds;
-    
-    [toolbar sizeToFit];
-    CGFloat toolbarHeight  = [toolbar frame].size.height;
-    CGFloat rootViewHeight = CGRectGetHeight(bounds);
-    CGFloat rootViewWidth  = CGRectGetWidth(bounds);
-    CGRect  rectArea       = CGRectMake(0, rootViewHeight - toolbarHeight, rootViewWidth, toolbarHeight);
-    [toolbar setFrame:rectArea];
-    
-    [overlayView addSubview: toolbar];
-    
-    UIImage* reticleImage = [self buildReticleImage];
-    UIView* reticleView = [[[UIImageView alloc] initWithImage: reticleImage] autorelease];
-    CGFloat minAxis = MIN(rootViewHeight, rootViewWidth);
-    
-    rectArea = CGRectMake(
-                          0.5 * (rootViewWidth  - minAxis),
-                          0.5 * (rootViewHeight - minAxis),
-                          minAxis,
-                          minAxis
-                          );
-    
-    [reticleView setFrame:rectArea];
-    
-    reticleView.opaque           = NO;
-    reticleView.contentMode      = UIViewContentModeScaleAspectFit;
-    reticleView.autoresizingMask = 0
-    | UIViewAutoresizingFlexibleLeftMargin
-    | UIViewAutoresizingFlexibleRightMargin
-    | UIViewAutoresizingFlexibleTopMargin
-    | UIViewAutoresizingFlexibleBottomMargin
-    ;
-    
-    [overlayView addSubview: reticleView];
+
+    //[toolbar sizeToFit];
+//    CGFloat toolbarHeight  = [toolbar frame].size.height;
+//    rootViewHeight = CGRectGetHeight(bounds);
+//    rootViewWidth  = CGRectGetWidth(bounds);
+//    CGRect  rectArea       = CGRectMake(0, rootViewHeight - toolbarHeight, rootViewWidth, toolbarHeight);
+//    toolbar.backgroundColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.0];
+//    [toolbar setFrame:rectArea];
+//
+//    [overlayView addSubview: toolbar];
+//
+//    UIImage* reticleImage = [self buildReticleImage];
+//    UIView* reticleView = [[[UIImageView alloc] initWithImage: reticleImage] autorelease];
+//    CGFloat minAxis = MIN(rootViewHeight, rootViewWidth);
+//    
+//    rectArea = CGRectMake(
+//                          0.5 * (rootViewWidth  - minAxis),
+//                          0.5 * (rootViewHeight - minAxis),
+//                          minAxis,
+//                          minAxis
+//                          );
+//    
+//    [reticleView setFrame:rectArea];
+//    
+//    reticleView.opaque           = NO;
+//    reticleView.contentMode      = UIViewContentModeScaleAspectFit;
+//    reticleView.autoresizingMask = 0
+//    | UIViewAutoresizingFlexibleLeftMargin
+//    | UIViewAutoresizingFlexibleRightMargin
+//    | UIViewAutoresizingFlexibleTopMargin
+//    | UIViewAutoresizingFlexibleBottomMargin
+//    ;
+//    
+//    [overlayView addSubview: reticleView];
     
     return overlayView;
 }

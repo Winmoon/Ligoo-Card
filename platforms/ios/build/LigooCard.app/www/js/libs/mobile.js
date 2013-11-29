@@ -4,7 +4,7 @@ var create_coupon, create_point, get_coupons, get_establishment, get_establishme
 // root_url = "http://localhost:3000/";
 // root_url = "http://10.0.0.102:3000/";
 // root_url = "http://10.0.0.100:3000/";
-root_url="http://ligoo-card.herokuapp.com/";
+root_url = "http://ligoo-card.herokuapp.com/";
 
 url = function(url) {
 	return root_url + url;
@@ -21,22 +21,25 @@ signin_with_facebook = function() {
 
 	loader("show");
 
-	FB.login((function(response) {
-
-		if (response.authResponse) {
-
-			var login_response = response.authResponse;
-
+	FB.getLoginStatus(function(responseStatus) {
+		console.log(responseStatus);
+		
+		var accessToken = responseStatus.authResponse.accessToken;
+		
+		if (responseStatus.status == 'connected') {
 			FB.api('/me', {
 				fields : 'birthday, gender'
-			}, function(response) {
+			}, function(responseMe) {
 
-				var birthday = response.birthday.substr(3, 2) + "/" + response.birthday.substr(0, 2) + "/" + response.birthday.substr(6, 4);
+				if (!responseMe.id)
+					return false;
 
-				var gender = response.gender == "male" ? "M" : "F";
+				var birthday = responseMe.birthday.substr(3, 2) + "/" + responseMe.birthday.substr(0, 2) + "/" + responseMe.birthday.substr(6, 4);
+
+				var gender = responseMe.gender == "male" ? "M" : "F";
 
 				$.getJSON(url("users/auth/facebook/callback") + "?" + $.param({
-					access_token : login_response.accessToken
+					access_token : accessToken
 				}), {
 					dataType : "json",
 					crossDomain : true,
@@ -44,7 +47,7 @@ signin_with_facebook = function() {
 						withCredentials : true
 					}
 				}, function(json) {
-					
+
 					localStorage.setItem("userData", JSON.stringify(json));
 					app.userData = JSON.parse(localStorage.getItem("userData"));
 					app.userLoggedIn = true;
@@ -53,10 +56,18 @@ signin_with_facebook = function() {
 						user : {
 							birth_date : birthday,
 							gender : gender
-						},
+						}
 					}, function(data) {
-						if (data.id)
+
+						if (data.id) {
 							localStorage.setItem("userData", JSON.stringify(data));
+
+							Backbone.Router.prototype.navigate("welcome", {
+								trigger : true,
+								replace : true
+							});
+
+						}
 
 					}).fail(function() {
 						loader("hide");
@@ -65,21 +76,65 @@ signin_with_facebook = function() {
 				});
 
 			});
+		} else if (responseStatus.status == 'not_authorized' || responseStatus.status == 'unknown') {
 
-			Backbone.Router.prototype.navigate("welcome", {
-				trigger : true,
-				replace : true
+			FB.login(function(responseLogin) {
+				
+				var accessToken = responseStatus.authResponse.accessToken;
+				
+				FB.api('/me', function(responseMe) {
+					if (!responseMe.id)
+						return false;
+
+					$.getJSON(url("users/auth/facebook/callback") + "?" + $.param({
+						access_token : accessToken
+					}), {
+						dataType : "json",
+						crossDomain : true,
+						xhrFields : {
+							withCredentials : true
+						}
+					}, function(json) {
+
+						localStorage.setItem("userData", JSON.stringify(json));
+						app.userData = JSON.parse(localStorage.getItem("userData"));
+						app.userLoggedIn = true;
+
+						Backbone.Router.prototype.navigate("welcome", {
+							trigger : true,
+							replace : true
+						});
+
+						$.post(url("user/api/update_profile.json"), {
+							user : {
+								birth_date : birthday,
+								gender : gender
+							}
+						}, function(data) {
+
+							if (data.id)
+								localStorage.setItem("userData", JSON.stringify(data));
+
+						}).fail(function(e) {
+							console.log(e);
+							loader("hide");
+						});
+
+					});
+
+				});
+			}, {
+				scope : 'email, publish_stream, publish_actions'
 			});
 
+		} else {
+			console.log(responseStatus);
+			loader("hide");
+			alert("ERROR");
 		}
 
-		loader("hide");
-
-	}), {
-		scope : "email, read_stream, publish_actions, publish_stream, user_birthday"
 	});
 }
-
 sign_in = function(user, pass) {
 	loader('show');
 
@@ -90,8 +145,10 @@ sign_in = function(user, pass) {
 			password : pass
 		}
 	}, function(data) {
-		if (data.id) {
 
+		console.log(data.error);
+
+		if (data.id) {
 			localStorage.setItem("userData", JSON.stringify(data));
 			app.userData = JSON.parse(localStorage.getItem("userData"));
 			app.userLoggedIn = true;
@@ -100,9 +157,6 @@ sign_in = function(user, pass) {
 				trigger : true,
 				replace : true
 			});
-
-		} else {
-			popup(data.error);
 		}
 
 		loader('hide');
@@ -173,32 +227,30 @@ update_profile = function(form) {
 
 create_point = function() {
 
-	if ( typeof establishmentsView != "undefined" && establishmentsView.viewing == "showview") {
-		barcodeScanner.scan(function(r) {
+	barcodeScanner.scan(function(r) {
 
-			loader("show");
-			
-			$.get(url("user/api/" + r.text + "/point.json"), {
-				point_type : "qrcode"
-			}, function(data) {
+		loader("show");
 
-				establishmentsView.updateBarPremiuns(1);
-				
-				popup(messages.pointAdded);				
-				$(".establishment-total-points").text(parseInt($(".establishment-total-points").text()) + 1);
-				
-				loader("hide");
+		$.get(url("user/api/" + r.text + "/point.json"), {
+			point_type : "qrcode"
+		}, function(data) {
 
-				if (establishmentsView.model.establishment.share_points > 0) {
-					navigator.notification.confirm("Compartihe no facebook e ganhe " + establishmentsView.model.establishment.share_points + " ponto(s) a mais", function(d) {
-						if (d == 1)
-							share_point("Acabei de ganhar mais " + establishmentsView.model.establishment.share_points + " ponto(s) no " + establishmentsView.model.establishment.name, establishmentsView.model.establishment.share_points, establishmentsView.model.establishment.id);
-					}, "Ganhe mais pontos!");
-				}
-			});
+			establishmentsView.updateBarPremiuns(1);
 
+			popup(messages.pointAdded);
+			$(".establishment-total-points").text(parseInt($(".establishment-total-points").text()) + 1);
+
+			if (establishmentsView.model.establishment.share_points > 0) {
+				navigator.notification.confirm("Compartihe no facebook e ganhe " + establishmentsView.model.establishment.share_points + " ponto(s) a mais", function(d) {
+					if (d == 1)
+						share_point("Acabei de ganhar mais " + establishmentsView.model.establishment.share_points + " ponto(s) no " + establishmentsView.model.establishment.name, establishmentsView.model.establishment.share_points, establishmentsView.model.establishment.id);
+				}, "Ganhe mais pontos!");
+			}
 		});
-	}
+
+		loader("hide");
+
+	});
 
 };
 
@@ -218,10 +270,10 @@ share_point = function(message, points, id) {
 			$.get(url("user/api/" + establishment_id + "/point.json"), {
 				point_type : "share"
 			}, function(data) {
-				alert("OK, seu compartilhamento foi efetuado e você ganhou mais "+points+" ponto(s)", null, "Parabéns!");
-				
+				alert("OK, seu compartilhamento foi efetuado e você ganhou mais " + points + " ponto(s)", null, "Parabéns!");
+
 				$(".establishment-total-points").text(parseInt($(".establishment-total-points").text()) + points);
-				
+
 				establishmentsView.updateBarPremiuns(points);
 
 			});
@@ -295,39 +347,3 @@ get_profile = function(cb) {
 		cb(data);
 	});
 };
-
-// $(function() {
-// $.ajaxSetup({
-// dataType : "json",
-// crossDomain : true,
-// xhrFields : {
-// withCredentials : true
-// },
-// statusCode : {
-// 403 : function(d) {
-//
-// var data = JSON.parse(d.responseText);
-//
-// alert(data.error);
-//
-// Backbone.Router.prototype.navigate("login", {
-// trigger : true,
-// replace : true
-// });
-//
-// loader('hide');
-// },
-// 400 : function(error) {
-// return alert("Não passou na validação: " + error.responseText);
-// },
-// 422 : function(error) {
-// return alert("Não passou na validação: " + error.responseText);
-// }
-// }
-// });
-//
-// // get_news();
-// // get_profile();
-// // update_profile();
-// // return get_profile();
-// });

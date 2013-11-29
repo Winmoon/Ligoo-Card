@@ -39,7 +39,7 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/mycards/myCardsViewT
 						noHaveCards : JSON.parse(data.responseText).length <= 0 ? true : false
 					};
 
-					img_url_prefix = root_url.substring(0, root_url.length - 1);
+					//img_url_prefix = root_url.substring(0, root_url.length - 1);
 
 					mycardsAdded = {};
 
@@ -50,7 +50,7 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/mycards/myCardsViewT
 							mycards.push({
 								id : this.establishment_id,
 								name : this.name,
-								logo : img_url_prefix + this.logo_urls.thumb,
+								logo : this.logo_urls.thumb,
 								pointsEarned : 0
 							});
 

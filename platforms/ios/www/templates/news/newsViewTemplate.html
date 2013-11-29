@@ -12,15 +12,12 @@
 	</div>
 	{{/noHaveNews}}	
 	{{#news}}
-	<div class="news-post-box">
+	<div class="news-post-box" data-establishment-id={{establishment.id}}>
 		<div class="news-post-header">
 			<div class="icon pull-left" style="background-image: url('{{establishment.logo_urls.thumb}}')"></div>
 			<div class="description pull-left">
 				<div class="title">
 					{{establishment.name}}
-				</div>
-				<div class="address">
-					{{establishment.address}}
 				</div>
 			</div>
 		</div>

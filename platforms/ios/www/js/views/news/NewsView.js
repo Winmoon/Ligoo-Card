@@ -11,14 +11,27 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/news/new
 			loader('show');
 			this.$el.html("");
 		},
+		
+		events : {
+			"click .news-post-box" : "open"
+		},
+				
+		open : function(d) {
+
+			var id = $(d.currentTarget).data("establishment-id");
+
+			Backbone.Router.prototype.navigate("establishments/show/" + id, {
+				trigger : true,
+				replace : true
+			});
+
+		},
 
 		render : function() {
 
 			_this = this;
 			
 			this.$headerTitle.html("Novidades");
-			
-			// sign_in();//TODO retirar
 			
 			setTimeout(function() {
 				get_news(function(data){
@@ -28,7 +41,11 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/news/new
 					img_url_prefix = root_url.substring(0,root_url.length-1);
 					
 					$(_this.model.news).each(function(){
-						this.establishment.logo_urls.thumb = img_url_prefix + this.establishment.logo_urls.thumb; 
+						
+						if(root_url == "http://localhost:3000/")
+							this.establishment.logo_urls.thumb = img_url_prefix + this.establishment.logo_urls.thumb;
+						else 
+							this.establishment.logo_urls.thumb = this.establishment.logo_urls.thumb;
 					});
 					
 					_this.templateOutput = app.loadTemplate("news", newsViewTemplate)(_this.model);
@@ -43,31 +60,3 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/news/new
 	});
 	return NewsView;
 });
-
-/*
-
- *
- * [
-
- {
- "created_at": "2013-11-05T16:18:45.862Z",
- "news": "Olha só agora na subway o sabor churrasco está R$ 6,69, não fique de fora!",
- "establishment": {
- "id": 1,
- "name": "Subway",
- "address": "Rua 9, nº 1855, Qd E-16, Lt àrea, Lojas 212/213, Setor Marista Goiânia - GO 74150-130, Brasil",
- "phone": "11 1111 1111",
- "description": "teste",
- "latitude": "-16.0",
- "longitude": "-49.0",
- "logo_urls": {
- "original": "/system/establishments/logos/000/000/001/original/logo_subway.png?1383595269",
- "medium": "/system/establishments/logos/000/000/001/medium/logo_subway.png?1383595269",
- "thumb": "/system/establishments/logos/000/000/001/thumb/logo_subway.png?1383595269"
- },
- "cover": "/system/establishments/covers/000/000/001/original/subway_topo.jpg?1383674885"
- }
- }
-
- ]
- * */

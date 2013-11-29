@@ -5,7 +5,7 @@ document.addEventListener("deviceready", function(e) {
 }, "false");
 
 //if (navigator.device.available == true)
-	window.alert = navigator.notification.alert;
+window.alert = navigator.notification.alert;
 
 function checkMandatories(form) {
 
@@ -143,18 +143,6 @@ function blockUI(msg, timeout) {
 
 }
 
-// function confirm(message, confirmCallback, title, buttonLabels, dismissCallback) {
-// navigator.notification.confirm(message, function(b) {
-// if(b == 1) {
-// if(confirmCallback)
-// confirmCallback();
-// } else {
-// if(dismissCallback)
-// dismissCallback();
-// }
-// }, title || "Confirm", buttonLabels || ["Yes", "No"]);
-// } //TODO ativar quando usar o phonegap
-
 function prompt(message, cb, title, buttons, defaultTxt) {
 	navigator.notification.prompt(message || "No message", cb ||
 	function() {
@@ -164,12 +152,10 @@ function prompt(message, cb, title, buttons, defaultTxt) {
 function getCoords(cb) {
 
 	app.userCoord = false;
-	
+
 	var _cb = cb;
 
 	var success = function(s) {
-		console.log("s");
-		console.log(s);
 		app.userCoord = [s.coords.latitude, s.coords.longitude];
 
 		if (cb)
@@ -178,10 +164,9 @@ function getCoords(cb) {
 	};
 
 	var error = function(e) {
-		
-		navigator.notification.confirm("Não consegui pegar sua localização, por favor verifique: \n\n - Se está permitido o aplicativo a usar dados de localização. \n - Se está ativado o serviço de localização"
-		, function(b){
-			if(b == 2)
+
+		navigator.notification.confirm("Não consegui pegar sua localização, por favor verifique: \n\n - Se está permitido o aplicativo a usar dados de localização. \n - Se está ativado o serviço de localização", function(b) {
+			if (b == 2)
 				getCoords(_cb);
 		}, "Erro", "Ok, Tentar novamente");
 		loader("hide");
@@ -218,6 +203,62 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 			}
 		};
 
+		$.ajaxSetup({
+			dataType : "json",
+			crossDomain : true,
+			xhrFields : {
+				withCredentials : true
+			},
+			statusCode : {
+				403 : function(d) {
+					var data = JSON.parse(d.responseText);
+
+					if (data.error)
+						alert(data.error, null, "Erro");
+
+					Backbone.Router.prototype.navigate("login", {
+						trigger : true,
+						replace : true
+					});
+					loader('hide');
+				},
+
+				401 : function(d) {
+					var data = JSON.parse(d.responseText);
+
+					if (data.error)
+						alert(data.error, null, "Erro");
+
+					Backbone.Router.prototype.navigate("login", {
+						trigger : true,
+						replace : true
+					});
+					loader('hide');
+				},
+
+				400 : function(error) {
+					var data = JSON.parse(d.responseText);
+
+					if (data.error)
+						alert(data.error, null, "Erro");
+
+					Backbone.Router.prototype.navigate("login", {
+						trigger : true,
+						replace : true
+					});
+					loader('hide');
+				},
+
+				422 : function(error) {
+					var data = JSON.parse(d.responseText);
+
+					alert(data.error, null, "Erro");
+
+					loader('hide');
+				}
+			}
+		});
+
 		get_points(function(data) {
 
 			var _data = JSON.parse(data.status);
@@ -238,41 +279,14 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 			status : true,
 			cookie : true,
 			xfbml : true,
-			frictionlessRequests : true,
-			useCachedDialogs : true,
 			oauth : true
 		});
 
-		$.ajaxSetup({
-			dataType : "json",
-			crossDomain : true,
-			xhrFields : {
-				withCredentials : true
-			},
-			statusCode : {
-				403 : function(d) {
-					var data = JSON.parse(d.responseText);
-					alert(data.error, null, "Erro");
-					Backbone.Router.prototype.navigate("login", {
-						trigger : true,
-						replace : true
-					});
-					loader('hide');
-				},
-
-				401 : function(d) {
-					var data = JSON.parse(d.responseText);
-					alert(data.error, null, "Erro");
-					loader('hide');
-				},
-				400 : function(error) {
-				},
-				422 : function(error) {
-				}
-			}
-		});
-
 		Router.initialize();
+		
+		//sign_in("teste@gmail.com", "asdfasdf");
+		
+		//create_point();
 
 	};
 

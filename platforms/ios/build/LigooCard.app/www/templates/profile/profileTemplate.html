@@ -5,22 +5,26 @@
 <div class="content left" id="profile-view">
 	<form id="profile-form" onsubmit="return false" class="txt-center">
 		<input type="hidden" name="remember_me" value="1" />
-
 		<label>Nome</label>
 		<input name="name" rel="mandatory" placeholder="Nome completo" type="text" value="{{name}}"/>
-		<div class="input_vertical_group">
-			<label>Telefone</label>
-			<input name="phone" rel="" type="tel" placeholder="Telefone (xx) xxxx-xxxx" value="{{phone}}"/>
-			<label>Data Nascimento</label>
-			<input name="birth_date" rel="mandatory" type="text" placeholder="Data de nascimento (dd/mm/aaaa)" value="{{birth_date}}"/>
-			<label>Email</label>
-			<input name="email" rel="mandatory" placeholder="E-mail" type="email" value="{{email}}"/>
-		</div>
+		<label>Telefone</label>
+		<input name="phone" rel="" type="tel" placeholder="Telefone (somente números)" value="{{phone}}"/>
+		<label>Data Nascimento</label>
+		<input name="birth_date" rel="mandatory" type="date" placeholder="Data de nascimento" value="{{birth_date}}"/>
+		<label>Email</label>
+		<input name="email" rel="mandatory" placeholder="E-mail" type="email" value="{{email}}"/>
 		<label style="margin-right: 10px;">Sexo</label>
-		<label>Masculino</label>
-		<input class="radio-shadow-blue" type="radio" name="gender" {{maleCheck}} value="M">
-		&nbsp;&nbsp;&nbsp; <label style="margin-left: 5px;">Feminino</label>
-		<input class="radio-shadow-pink" type="radio" name="gender" {{femCheck}} value="F">
+		<div class="radio_content">
+			<span>Masculino</span>
+			<span>
+				<input type="radio" name="gender" {{maleCheck}} value="M">
+			</span>
+			&nbsp;&nbsp;&nbsp;
+			<span style="margin-left: 5px;">Feminino</span>
+			<span>
+				<input class="radio-shadow-pink" type="radio" name="gender" {{femCheck}} value="F">
+			</span>
+		</div>
 		<div class="buttons_group" style="top: 28px;">
 			<img src="./imgs/btn-atualizar.png" class="btn-atualizar-profile" />
 		</div>
