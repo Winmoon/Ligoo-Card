@@ -1,10 +1,10 @@
 var create_coupon, create_point, get_coupons, get_establishment, get_establishments, get_near_establishments, get_news, get_points, get_profile, like_establishment, make_base_auth, root_url, sign_in, sign_up, update_profile, url;
 
 //root_url = "http://192.168.2.19:3000/";
-// root_url = "http://localhost:3000/";
+root_url = "http://localhost:3000/";
 // root_url = "http://10.0.0.102:3000/";
 // root_url = "http://10.0.0.100:3000/";
-root_url = "http://ligoo-card.herokuapp.com/";
+// root_url = "http://ligoo-card.herokuapp.com/";
 
 url = function(url) {
 	return root_url + url;
@@ -23,9 +23,9 @@ signin_with_facebook = function() {
 
 	FB.getLoginStatus(function(responseStatus) {
 		console.log(responseStatus);
-		
+
 		var accessToken = responseStatus.authResponse.accessToken;
-		
+
 		if (responseStatus.status == 'connected') {
 			FB.api('/me', {
 				fields : 'birthday, gender'
@@ -79,9 +79,9 @@ signin_with_facebook = function() {
 		} else if (responseStatus.status == 'not_authorized' || responseStatus.status == 'unknown') {
 
 			FB.login(function(responseLogin) {
-				
+
 				var accessToken = responseStatus.authResponse.accessToken;
-				
+
 				FB.api('/me', function(responseMe) {
 					if (!responseMe.id)
 						return false;
@@ -225,32 +225,97 @@ update_profile = function(form) {
 
 };
 
+function calculateDistance(lat1, lon1, lat2, lon2, unit) {
+	var radlat1 = Math.PI * lat1 / 180;
+	var radlat2 = Math.PI * lat2 / 180;
+	var radlon1 = Math.PI * lon1 / 180;
+	var radlon2 = Math.PI * lon2 / 180;
+	var theta = lon1 - lon2;
+	var radtheta = Math.PI * theta / 180;
+	var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+	dist = Math.acos(dist);
+	dist = dist * 180 / Math.PI;
+	dist = dist * 60 * 1.1515;
+	if (unit == "K" || unit == "") {
+		dist = dist * 1.609344;
+	}
+	if (unit == "N") {
+		dist = dist * 0.8684;
+	}
+	if (unit == "M") {
+		dist = dist * 1.609344 * 1000;
+	}
+	return dist;
+}
+
+//abrir estabelecimento de forma externa
+openViaExternal = function(id) {
+
+	var id = id;
+
+	Backbone.Router.prototype.navigate("establishments/show/" + id, {
+		trigger : true,
+		replace : true
+	});
+
+};
+
 create_point = function() {
 
-	barcodeScanner.scan(function(r) {
+	//barcodeScanner.scan(function(r) {
 
-		loader("show");
+	var r = {
+		text : 1
+	};
 
-		$.get(url("user/api/" + r.text + "/point.json"), {
-			point_type : "qrcode"
-		}, function(data) {
+	loader("show");
 
-			establishmentsView.updateBarPremiuns(1);
+	var cb = function() {
 
-			popup(messages.pointAdded);
-			$(".establishment-total-points").text(parseInt($(".establishment-total-points").text()) + 1);
+		get_establishment(r.text, function(data) {
+			var establishment = JSON.parse(data.responseText);
 
-			if (establishmentsView.model.establishment.share_points > 0) {
-				navigator.notification.confirm("Compartihe no facebook e ganhe " + establishmentsView.model.establishment.share_points + " ponto(s) a mais", function(d) {
-					if (d == 1)
-						share_point("Acabei de ganhar mais " + establishmentsView.model.establishment.share_points + " ponto(s) no " + establishmentsView.model.establishment.name, establishmentsView.model.establishment.share_points, establishmentsView.model.establishment.id);
-				}, "Ganhe mais pontos!");
+			//Verifica se a distancia em metros da pessoa do estabelecimento é menor que o valor desejado, caso seja é pq esta perto do estabelecimento
+			if (calculateDistance(app.userCoord[0], app.userCoord[1], establishment.latitude, establishment.longitude, "M") >= 30) {
+
+					$.get(url("user/api/" + r.text + "/point.json"), {
+						point_type : "qrcode"
+					}, function(data) {
+						establishmentsView.updateBarPremiuns(1);
+						popup(messages.pointAdded);
+						openViaExternal(r.text);
+						
+						$(".establishment-total-points").text(parseInt($(".establishment-total-points").text()) + 1);
+						if (establishment.share_points > 0) {
+							
+							var nDate = new Date();
+							nDate = nDate.getDay() +"/"+ nDate.getMonth() + "/" + nDate.getFullYear() + " - " + nDate.getHours()+ ":" + nDate.getMinutes()+ ":" + nDate.getSeconds();
+							
+							navigator.notification.confirm("Compartihe no facebook e ganhe " + establishment.share_points + " ponto(s) a mais", function(d) {
+								if (d == 1)
+									share_point(""+nDate+"<br<br>Acabei de ganhar mais " + establishment.share_points + " ponto(s) no " + establishment.name, establishment.share_points, establishment.id);
+							}, "Ganhe mais pontos!");
+						}
+					}).fail(function(a, b, c) {
+
+						if (c == "Unprocessable Entity")
+							alert("Você só pode ganhar um ponto por dia neste estabelecimento.");
+
+					});
+
+			} else {
+				console.log(calculateDistance(app.userCoord[0], app.userCoord[1], establishment.latitude, establishment.longitude, "M"));
+				popup("Você deve estar no estabelecimento para pontuar.");
 			}
+
 		});
 
-		loader("hide");
+	}
+	getCoords(cb);
 
-	});
+	loader("hide");
+
+	//});
 
 };
 

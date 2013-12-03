@@ -202,7 +202,7 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 			});
 
 		},
-
+		
 		list : function() {
 
 			this.viewing = "listview";

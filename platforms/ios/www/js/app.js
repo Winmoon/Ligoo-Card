@@ -4,7 +4,7 @@ document.addEventListener("deviceready", function(e) {
 	navigator.splashscreen.hide();
 }, "false");
 
-//if (navigator.device.available == true)
+if (device.available !== false)
 window.alert = navigator.notification.alert;
 
 function checkMandatories(form) {
@@ -250,11 +250,15 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 				},
 
 				422 : function(error) {
-					var data = JSON.parse(d.responseText);
+					var data = JSON.parse(error.responseText);
 
-					alert(data.error, null, "Erro");
+					if(data.point_type)
+						alert(data.point_type, null, "Erro");
+					else if (data.error)
+						alert(data.error, null, "Erro");
+					else
+						alert("Erro 422", null, "Erro");
 
-					loader('hide');
 				}
 			}
 		});
@@ -273,6 +277,9 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 
 		});
 
+		if (localStorage.getItem("userData") != "" || typeof localStorage.getItem("userData") != "undefined")
+			app.userData = JSON.parse(localStorage.getItem("userData"));
+
 		FB.init({
 			appId : "183318471871083",
 			nativeInterface : CDV.FB,
@@ -283,9 +290,9 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 		});
 
 		Router.initialize();
-		
+
 		//sign_in("teste@gmail.com", "asdfasdf");
-		
+
 		//create_point();
 
 	};
