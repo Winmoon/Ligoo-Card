@@ -26,5 +26,19 @@
 		</div>
 		<hr class="separator" />
 		{{/mycards}}
+		{{#myOwnedCards}}
+		<div class="item" data-establishment-id="{{id}}">
+			<div class="icon pull-left" style="background-image: url('{{logo}}')"></div>
+			<div class="description text-shadow-white pull-left">
+				<div class="title">
+					{{name}}
+				</div>
+				<div>
+					Você tem <span class="points">{{pointsEarned}}</span> {{pointsText}}
+				</div>
+			</div>
+		</div>
+		<hr class="separator" />
+		{{/myOwnedCards}}
 	</div>
 </div>

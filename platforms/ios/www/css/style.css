@@ -513,6 +513,7 @@ input {
 	background-size: contain;
 	-webkit-background-size: contain;
 	border-radius: 10px 10px 10px 10px;
+	-webkit-border-radius: 10px 10px 10px 10px;
 	height: 20px;
 	width: 0%;
 }

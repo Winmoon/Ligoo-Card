@@ -2,10 +2,10 @@ app = {};
 
 document.addEventListener("deviceready", function(e) {
 	navigator.splashscreen.hide();
-}, "false");
 
-if (device.available !== false)
-window.alert = navigator.notification.alert;
+	window.alert = navigator.notification.alert;
+
+}, "false");
 
 function checkMandatories(form) {
 
@@ -252,7 +252,7 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 				422 : function(error) {
 					var data = JSON.parse(error.responseText);
 
-					if(data.point_type)
+					if (data.point_type)
 						alert(data.point_type, null, "Erro");
 					else if (data.error)
 						alert(data.error, null, "Erro");
