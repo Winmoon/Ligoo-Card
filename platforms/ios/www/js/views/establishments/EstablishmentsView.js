@@ -13,7 +13,6 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 			showAppHeaderFooter(true, true);
 			loader('show');
 			this.$el.html("");
-			this.$el.unbind();
 		},
 
 		showView : function(id) {
@@ -25,7 +24,7 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 
 			setTimeout(function() {
 
-				get_points(function(data) {
+				get_points(_this.options.id, function(data) {
 					_this.points = JSON.parse(data.responseText);
 
 					_this.pointsEarned = 0;
@@ -186,22 +185,24 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 			var cb = function() {
 				barcodeScanner.scan(function(r) {
 
-					var establishment_qrcode = r.text;
+					if (!r.cancelled) {
+						var establishment_qrcode = r.text;
 
-					create_coupon(id, function(data) {
-						var response = JSON.parse(data.responseText);
+						create_coupon(id, function(data) {
+							var response = JSON.parse(data.responseText);
 
-						check_coupon(response.id, establishment_qrcode, function(data) {
-							popup(messages.premiumConsumed + "<br><br> Código do cupom/prêmio: " + response.id);
-							el.find(".points-to-win.won-premium").animate({
-								width : "0%"
-							}, 750);
-							el.removeClass("won-premium");
-							el.unbind();
-							_this.refresh();
+							check_coupon(response.id, establishment_qrcode, function(data) {
+								popup(messages.premiumConsumed + "<br><br> Código do cupom/prêmio: " + response.id);
+								el.find(".points-to-win.won-premium").animate({
+									width : "0%"
+								}, 750);
+								el.removeClass("won-premium");
+								el.unbind();
+								_this.refresh();
+							});
+
 						});
-
-					});
+					}
 
 				});
 			};
@@ -209,6 +210,7 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 			navigator.notification.confirm("Esta operação deve ser realizada no estabelecimento, caso contrário, poderá perder seus pontos. Deseja prosseguir?", function(b) {
 				if (b == 1)
 					cb();
+
 			}, "Atenção!");
 
 		},

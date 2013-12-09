@@ -172,7 +172,7 @@ function getCoords(cb) {
 		loader("hide");
 	};
 
-	navigator.geolocation.getCurrentPosition(success, error);
+	navigator.geolocation.getCurrentPosition(success, error, {enableHighAccuracy: true, timeout: 10000});
 }
 
 // Filename: app.js
@@ -263,7 +263,7 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 			}
 		});
 
-		get_points(function(data) {
+		get_cards(function(data) {
 
 			var _data = JSON.parse(data.status);
 
@@ -290,10 +290,6 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 		});
 
 		Router.initialize();
-
-		//sign_in("teste@gmail.com", "asdfasdf");
-
-		//create_point();
 
 	};
 
