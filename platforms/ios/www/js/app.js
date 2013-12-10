@@ -5,6 +5,15 @@ document.addEventListener("deviceready", function(e) {
 
 	window.alert = navigator.notification.alert;
 
+	FB.init({
+		appId : "183318471871083",
+		nativeInterface : CDV.FB,
+		status : true,
+		cookie : true,
+		xfbml : true,
+		oauth : true
+	});
+
 }, "false");
 
 function checkMandatories(form) {
@@ -172,7 +181,10 @@ function getCoords(cb) {
 		loader("hide");
 	};
 
-	navigator.geolocation.getCurrentPosition(success, error, {enableHighAccuracy: true, timeout: 10000});
+	navigator.geolocation.getCurrentPosition(success, error, {
+		enableHighAccuracy : true,
+		timeout : 10000
+	});
 }
 
 // Filename: app.js
@@ -187,6 +199,7 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 			this.remove();
 			this.unbind();
 			this.$el.unbind();
+			this.el.unbind();
 			if (this.onClose) {
 				this.onClose();
 			}
@@ -279,15 +292,6 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 
 		if (localStorage.getItem("userData") != "" || typeof localStorage.getItem("userData") != "undefined")
 			app.userData = JSON.parse(localStorage.getItem("userData"));
-
-		FB.init({
-			appId : "183318471871083",
-			nativeInterface : CDV.FB,
-			status : true,
-			cookie : true,
-			xfbml : true,
-			oauth : true
-		});
 
 		Router.initialize();
 

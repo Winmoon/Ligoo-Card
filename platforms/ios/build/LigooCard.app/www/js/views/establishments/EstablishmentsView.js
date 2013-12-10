@@ -13,7 +13,7 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 			showAppHeaderFooter(true, true);
 			loader('show');
 			this.$el.html("");
-			this.$el.unbind();
+			this.el.unbind();
 		},
 
 		showView : function(id) {
@@ -25,7 +25,7 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 
 			setTimeout(function() {
 
-				get_points(function(data) {
+				get_points(_this.options.id, function(data) {
 					_this.points = JSON.parse(data.responseText);
 
 					_this.pointsEarned = 0;
@@ -46,16 +46,29 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 
 						img_url_prefix = root_url.substring(0, root_url.length - 1);
 
-						
-						if(root_url == "http://localhost:3000/"){
-							_this.model.establishment.logo = img_url_prefix + _this.model.establishment.logo_urls.thumb;
-							_this.model.establishment.cover = img_url_prefix + _this.model.establishment.cover;
-						}
-						else {
-							_this.model.establishment.logo = _this.model.establishment.logo_urls.thumb;
-							_this.model.establishment.cover = _this.model.establishment.cover;
-						}
+						_this.model.establishment.logo = _this.model.establishment.logo_urls.thumb;
+						_this.model.establishment.cover = _this.model.establishment.cover;
+
+						_this.model.establishment.noTotalPoints = true;
 						_this.model.establishment.totalPoints = _this.pointsEarned;
+
+						_this.model.establishment.pointsLabel = "pontos";
+
+						if (_this.model.establishment.totalPoints > 0) {
+							_this.model.establishment.noTotalPoints = false;
+							_this.model.establishment.remove_icon = "remove-icon";
+							_this.model.establishment.haveTotalPoints = true;
+
+							if (_this.model.establishment.totalPoints == 1)
+								_this.model.establishment.pointsLabel = "ponto";
+							else
+								_this.model.establishment.pointsLabel = "pontos";
+
+						} else if (_this.model.establishment.totalPoints <= 0) {
+							_this.model.establishment.add_card = "add_card_mycards";
+							_this.model.establishment.haveTotalPoints = false;
+							_this.model.establishment.pointsLabel = "";
+						}
 
 						havePremiuns = false;
 						$(_this.model.establishment.promotions).each(function() {
@@ -64,6 +77,7 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 							this.percentage = (_this.model.establishment.totalPoints * 100) / this.points + "%";
 
 							if (parseInt(this.percentage) >= 100) {
+								this.percentage = "100%";
 								havePremiuns = true;
 								this.wonPremiumClass = "won-premium";
 							}
@@ -83,8 +97,31 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 						else
 							_this.model.establishment.lovelly = "gostou";
 
-						_this.templateOutput = app.loadTemplate("establishments_show", showViewTemplate)(_this.model.establishment);
-						_this.$el.html(_this.templateOutput);
+						get_cards(function(data) {
+
+							data = JSON.parse(data.responseText);
+
+							$(data).each(function(i) {
+
+								if (this.establishment_id == _this.options.id) {
+									_this.model.establishment.add_card = "";
+									_this.model.establishment.haveTotalPoints = true;
+									_this.model.establishment.remove_icon = "remove-icon";
+									_this.model.establishment.add_card = "";
+									_this.model.establishment.noTotalPoints = false;
+									if (_this.model.establishment.totalPoints == 1)
+										_this.model.establishment.pointsLabel = "ponto";
+									else
+										_this.model.establishment.pointsLabel = "pontos";
+									return;
+								}
+							});
+
+							_this.templateOutput = app.loadTemplate("establishments_show", showViewTemplate)(_this.model.establishment);
+							_this.$el.html(_this.templateOutput);
+
+						});
+
 						loader('hide');
 
 						if (havePremiuns === true)
@@ -102,7 +139,12 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 			"click .item" : "open",
 			"click .like-counter" : "like_counter",
 			"click .ofertas-item.won-premium" : "won_coupon_create_coupon",
-			"click .refresh" : "refresh"
+			"click .refresh" : "refresh",
+			"click .add_card_mycards" : "add_card_mycards"
+		},
+
+		add_card_mycards : function(e) {
+			create_card(this.options.id, $(e.currentTarget));
 		},
 
 		refresh : function() {
@@ -113,7 +155,7 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 		updateBarPremiuns : function(points) {
 			havePremiuns = false;
 
-			establishmentsView.model.establishment.totalPoints+=points;
+			establishmentsView.model.establishment.totalPoints += points;
 
 			$(establishmentsView.model.establishment.promotions).each(function() {
 
@@ -144,29 +186,32 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 			var cb = function() {
 				barcodeScanner.scan(function(r) {
 
-					var establishment_qrcode = r.text;
+					if (!r.cancelled) {
+						var establishment_qrcode = r.text;
 
-					create_coupon(id, function(data) {
-						var response = JSON.parse(data.responseText);
+						create_coupon(id, function(data) {
+							var response = JSON.parse(data.responseText);
 
-						check_coupon(response.id, establishment_qrcode, function(data) {
-							popup(messages.premiumConsumed + "<br><br> Código do cupom/prêmio: " + response.id);
-							el.find(".points-to-win.won-premium").animate({
-								width : "0%"
-							}, 750);
-							el.removeClass("won-premium");
-							el.unbind();
-							_this.refresh();
+							check_coupon(response.id, establishment_qrcode, function(data) {
+								popup(messages.premiumConsumed + "<br><br> Código do cupom/prêmio: " + response.id);
+								el.find(".points-to-win.won-premium").animate({
+									width : "0%"
+								}, 750);
+								el.removeClass("won-premium");
+								el.unbind();
+								_this.refresh();
+							});
+
 						});
-
-					});
+					}
 
 				});
 			};
 
-			navigator.notification.confirm("Esta operação deve ser realizada no estabelecimento, caso contrário, poderá perder seus pontos. Deseja prosseguir?", function(b){
-				if(b == 1)
+			navigator.notification.confirm("Esta operação deve ser realizada no estabelecimento, caso contrário, poderá perder seus pontos. Deseja prosseguir?", function(b) {
+				if (b == 1)
 					cb();
+
 			}, "Atenção!");
 
 		},
@@ -225,15 +270,8 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 						img_url_prefix = root_url.substring(0, root_url.length - 1);
 
 						$(_this.model.establishments).each(function() {
-							
-							if(root_url == "http://localhost:3000/"){
-								this.logo = img_url_prefix + this.logo_urls.thumb;
-							}
-							else 
-								this.logo = this.logo_urls.thumb;
-
+							this.logo = this.logo_urls.thumb;
 							this.distance = Math.round(this.distance) + "Km";
-
 						});
 
 						_this.templateOutput = app.loadTemplate("establishments", listViewTemplate)(_this.model);

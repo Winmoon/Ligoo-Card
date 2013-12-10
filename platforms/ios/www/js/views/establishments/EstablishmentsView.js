@@ -13,6 +13,7 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 			showAppHeaderFooter(true, true);
 			loader('show');
 			this.$el.html("");
+			this.el.unbind();
 		},
 
 		showView : function(id) {

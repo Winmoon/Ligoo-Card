@@ -2,10 +2,19 @@ app = {};
 
 document.addEventListener("deviceready", function(e) {
 	navigator.splashscreen.hide();
-}, "false");
 
-//if (navigator.device.available == true)
-window.alert = navigator.notification.alert;
+	window.alert = navigator.notification.alert;
+
+	FB.init({
+		appId : "183318471871083",
+		nativeInterface : CDV.FB,
+		status : true,
+		cookie : true,
+		xfbml : true,
+		oauth : true
+	});
+
+}, "false");
 
 function checkMandatories(form) {
 
@@ -172,7 +181,10 @@ function getCoords(cb) {
 		loader("hide");
 	};
 
-	navigator.geolocation.getCurrentPosition(success, error);
+	navigator.geolocation.getCurrentPosition(success, error, {
+		enableHighAccuracy : true,
+		timeout : 10000
+	});
 }
 
 // Filename: app.js
@@ -187,6 +199,7 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 			this.remove();
 			this.unbind();
 			this.$el.unbind();
+			this.el.unbind();
 			if (this.onClose) {
 				this.onClose();
 			}
@@ -250,16 +263,20 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 				},
 
 				422 : function(error) {
-					var data = JSON.parse(d.responseText);
+					var data = JSON.parse(error.responseText);
 
-					alert(data.error, null, "Erro");
+					if (data.point_type)
+						alert(data.point_type, null, "Erro");
+					else if (data.error)
+						alert(data.error, null, "Erro");
+					else
+						alert("Erro 422", null, "Erro");
 
-					loader('hide');
 				}
 			}
 		});
 
-		get_points(function(data) {
+		get_cards(function(data) {
 
 			var _data = JSON.parse(data.status);
 
@@ -273,20 +290,10 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 
 		});
 
-		FB.init({
-			appId : "183318471871083",
-			nativeInterface : CDV.FB,
-			status : true,
-			cookie : true,
-			xfbml : true,
-			oauth : true
-		});
+		if (localStorage.getItem("userData") != "" || typeof localStorage.getItem("userData") != "undefined")
+			app.userData = JSON.parse(localStorage.getItem("userData"));
 
 		Router.initialize();
-		
-		//sign_in("teste@gmail.com", "asdfasdf");
-		
-		//create_point();
 
 	};
 

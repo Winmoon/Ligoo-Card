@@ -20,11 +20,18 @@
 			<span class="counter">{{likes_count}}</span>
 			{{lovelly}}
 		</div>
-		<div class="pull-left add-card remove-icon block">
+		<div class="pull-left add-card {{remove_icon}} {{add_card}} block">
 			<div class="establishment-total-points">
-				{{totalPoints}}
+				{{#noTotalPoints}}
+				<strong style="font-size: 12px; display: inline-block; line-height: 14px; margin-left: 18px; width: 100px; margin-top: 3px;">
+					Adicionar <br>cartão
+				</strong>
+				{{/noTotalPoints}}
+				{{#haveTotalPoints}}
+					{{totalPoints}}
+				{{/haveTotalPoints}}
 			</div>
-			pontos
+			{{pointsLabel}}
 		</div>
 	</div>
 	<div class="clearfix"></div>
