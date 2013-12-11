@@ -86,7 +86,8 @@ signin_with_facebook = function() {
 	}), {
 		scope : "email"
 	});
-}
+};
+
 sign_in = function(user, pass) {
 	loader('show');
 
@@ -166,7 +167,7 @@ update_profile = function(form) {
 			if (data.id)
 				localStorage.setItem("userData", JSON.stringify(data));
 
-			alert("Dados atualizados com sucesso");
+			alert("Dados atualizados com sucesso", null, "Atualização de dados");
 
 			loader("hide");
 
@@ -218,28 +219,39 @@ create_point = function() {
 
 	barcodeScanner.scan(function(r) {
 
-		if (!r.cancelled) {
+	// var r = {
+		// text : "1,ligoocard",
+		// cancelled : false
+	// };
 
-			var ligooValidator = r.text.split(",");
+	if (!r.cancelled) {
 
-			if (ligooValidator[1] != "" && ligooValidator[1] != "ligoocard") {
-				loader("hide");
-				alert("Este QRCode não faz parte do Ligoocard", null, "Erro");
-				return;
-			} else if (ligooValidator[1] == "") {
-			}
+		var ligooValidator = r.text.split(",");
 
-			var cb = function() {
+		if (ligooValidator[1] != "" && ligooValidator[1] != "ligoocard") {
+			loader("hide");
+			alert("Este QRCode não faz parte do Ligoocard", null, "Erro");
+			return;
+		} else if (ligooValidator[1] == "") {
+			loader("hide");
+			alert("Este QRCode não faz parte do Ligoocard", null, "Erro");
+			return;
+		}
+		//
+		var cb = function() {
 
-				get_establishment(ligooValidator[0], function(data) {
-					var establishment = JSON.parse(data.responseText);
+			get_establishment(ligooValidator[0], function(data) {
+				var establishment = JSON.parse(data.responseText);
 
-					//Verifica se a distancia em metros da pessoa do estabelecimento é menor que o valor desejado, caso seja é pq esta perto do estabelecimento
-					if (calculateDistance(app.userCoord[0], app.userCoord[1], establishment.latitude, establishment.longitude, "M") <= 1000) {
+				//Verifica se a distancia em metros da pessoa do estabelecimento é menor que o valor desejado, caso seja é pq esta perto do estabelecimento
+				if (calculateDistance(app.userCoord[0], app.userCoord[1], establishment.latitude, establishment.longitude, "M") <= 1000) {
 
-						$.get(url("user/api/" + ligooValidator[0] + "/point.json"), {
-							point_type : "qrcode"
-						}, function(data) {
+					var establishmentID = parseInt(ligooValidator[0]);
+
+					// setTimeout(function() {
+					$.get(url("user/api/" + establishmentID + "/point.json"), {
+						point_type : "qrcode"
+					}, function(data) {
 
 							if ( typeof establishmentsView != "undefined") {
 								establishmentsView.updateBarPremiuns(1);
@@ -256,34 +268,37 @@ create_point = function() {
 
 								navigator.notification.confirm("Compartihe no facebook e ganhe " + establishment.share_points + " ponto(s) a mais", function(d) {
 									if (d == 1)
-										share_point("" + nDate + " - Acabei de ganhar mais " + establishment.share_points + " ponto(s) no " + establishment.name, establishment.share_points, establishment.id);
+										share_point("" + nDate + " - Acabei de ganhar mais " + establishment.share_points + " ponto(s) no " + establishment.name+"", establishment.share_points, establishmentID);
 
 								}, "Ganhe mais pontos!");
 							}
 
 							loader("hide");
 
-						}).fail(function(a, b, c) {
+					}).fail(function(a, b, c) {
 
-							if (c == "Unprocessable Entity")
-								alert("Você só pode ganhar um ponto por dia neste estabelecimento.", null, "Oppss...");
-							loader("hide");
+						if (c == "Unprocessable Entity")
+							alert("Você só pode ganhar um ponto por dia neste estabelecimento.", null, "Oppss...");
 
-						});
-
-					} else {
-						//console.log(calculateDistance(app.userCoord[0], app.userCoord[1], establishment.latitude, establishment.longitude, "M"));
-						alert("Você deve estar no estabelecimento para pontuar.", null, "Atenção");
 						loader("hide");
-					}
 
-				});
+					});
 
-			}
-			getCoords(cb);
 
-		} else
-			loader("hide");
+				} else {
+					alert("Você deve estar no estabelecimento para pontuar.", null, "Atenção");
+					loader("hide");
+				}
+
+			});
+
+		};
+
+		getCoords(cb);
+
+	} else {
+		loader("hide");
+	}
 
 	});
 
@@ -296,8 +311,12 @@ create_card = function(establishment, el) {
 		alert("Adicionado com sucesso!", null, "Adicionando cartão");
 	});
 
-}
+};
+
 share_point = function(message, points, id) {
+	console.log(message);
+	console.log(points);
+	console.log(id);
 
 	var establishment_id = id;
 
@@ -310,15 +329,14 @@ share_point = function(message, points, id) {
 			alert('Algum erro ao compartilhar seu ponto no facebook');
 			console.log(response);
 		} else {
-
-			$.get(url("user/api/" + establishment_id + "/point.json"), {
+			$.get(url("user/api/"+ establishment_id+ "/point.json"), {
 				point_type : "share"
 			}, function(data) {
-				alert("OK, seu compartilhamento foi efetuado e você ganhou mais " + points + " ponto(s)", null, "Parabéns!");
+				alert("OK, seu compartilhamento foi efetuado e você ganhou mais " + point + " ponto(s)", null, "Parabéns!");
 
-				$(".establishment-total-points").text(parseInt($(".establishment-total-points").text()) + points);
+				$(".establishment-total-points").text(parseInt($(".establishment-total-points").text()) + point);
 
-				establishmentsView.updateBarPremiuns(points);
+				establishmentsView.updateBarPremiuns(point);
 
 			});
 

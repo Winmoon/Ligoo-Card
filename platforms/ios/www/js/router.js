@@ -1,11 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'views/login/LoginView', 
-		'views/sign_up/SignUpView',
-		'views/news/NewsView',
-		'views/mycards/MyCardsView',
-		'views/establishments/EstablishmentsView',
-		'views/welcome/WelcomeView',
-		'views/profile/ProfileView'
-		], function($, _, Backbone, LoginView, SignUpView, NewsView, MyCardsView, EstablishmentsView, WelcomeView, ProfileView) {
+define(['jquery', 'underscore', 'backbone', 'views/login/LoginView', 'views/sign_up/SignUpView', 'views/news/NewsView', 'views/mycards/MyCardsView', 'views/establishments/EstablishmentsView', 'views/welcome/WelcomeView', 'views/profile/ProfileView'], function($, _, Backbone, LoginView, SignUpView, NewsView, MyCardsView, EstablishmentsView, WelcomeView, ProfileView) {
 
 	var AppRouter = Backbone.Router.extend({
 		routes : {
@@ -20,6 +13,7 @@ define(['jquery', 'underscore', 'backbone', 'views/login/LoginView',
 			'me' : 'me',
 			'*actions' : 'defaultAction'
 		}
+
 	});
 
 	var initialize = function() {
@@ -27,8 +21,7 @@ define(['jquery', 'underscore', 'backbone', 'views/login/LoginView',
 		var app_router = new AppRouter;
 
 		app_router.on('route:defaultAction', function(actions) {
-			
-			
+
 			if (app.userLoggedIn === false)
 				app_router.navigate("login", {
 					trigger : true,
@@ -42,13 +35,13 @@ define(['jquery', 'underscore', 'backbone', 'views/login/LoginView',
 			}
 
 		});
-		
+
 		app_router.on('route:me', function() {
 
 			profileView = new ProfileView();
 			profileView.render();
 		});
-		
+
 		app_router.on('route:welcome', function() {
 
 			welcomeView = new WelcomeView();
@@ -57,17 +50,30 @@ define(['jquery', 'underscore', 'backbone', 'views/login/LoginView',
 
 		app_router.on('route:establishments_show', function(id) {
 
-			establishmentsView = new EstablishmentsView({id: id});
+			if(typeof establishmentsView !="undefined"){
+				establishmentsView.prepareToDie();
+				delete establishmentsView;
+			}
+			
+			establishmentsView = new EstablishmentsView({
+				id : id
+			});
+			
 			establishmentsView.showView();
 		});
-		
-		
+
 		app_router.on('route:establishments_list', function(action) {
 
+			
+			if(typeof establishmentsView !="undefined"){
+				establishmentsView.prepareToDie();
+				delete establishmentsView;
+			}
+			
 			establishmentsView = new EstablishmentsView();
 			establishmentsView.list();
 		});
-		
+
 		app_router.on('route:news', function() {
 
 			newsView = new NewsView();
@@ -79,7 +85,7 @@ define(['jquery', 'underscore', 'backbone', 'views/login/LoginView',
 			homeView = new HomeView();
 			homeView.render();
 		});
-		
+
 		app_router.on('route:mycards', function() {
 
 			mycardsView = new MyCardsView();

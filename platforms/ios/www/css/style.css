@@ -819,13 +819,12 @@ input[type=radio] {
 }
 
 .btn-fazer-logout {
-  background: url("../imgs/exit.png") no-repeat scroll 0 0 transparent;
+  background: url("../imgs/exit.png") no-repeat scroll center center transparent;
   float: right;
-  height: 23px;
-  margin-bottom: 15px;
-  margin-right: 11px;
-  margin-top: 15px;
-  width: 26px;
+  height: 42px;
+  position: relative;
+  top: 5px;
+  width: 45px;
 }
 
 .establishment-top .address{

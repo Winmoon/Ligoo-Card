@@ -9,7 +9,8 @@ define(['jquery', 'underscore', 'mustache', 'backbone', 'text!templates/profile/
 		initialize : function() {
 			loader('show');
 			this.$el.html("");
-			this.$el.unbind();
+			this.undelegateEvents();
+			_.bindAll(this);
 		},
 
 		render : function() {
@@ -19,13 +20,6 @@ define(['jquery', 'underscore', 'mustache', 'backbone', 'text!templates/profile/
 
 			get_profile(function(data) {
 				_this.model = data;
-
-				console.log(data);
-
-				if (_this.model.birth_date != null)
-					_this.model.birth_date = _this.model.birth_date;
-					
-				//_this.model.birth_date = parseDate(_this.model.birth_date);
 
 				_this.model.maleCheck = _this.model.gender == "M" ? "checked" : "";
 				_this.model.femCheck = _this.model.gender == "F" ? "checked" : "";
@@ -43,7 +37,6 @@ define(['jquery', 'underscore', 'mustache', 'backbone', 'text!templates/profile/
 
 		events : {
 			"click .btn-atualizar-profile" : 'profile_update',
-			"click .btn-fazer-logout" : 'logout'
 		},
 
 		profile_update : function() {
@@ -62,12 +55,12 @@ define(['jquery', 'underscore', 'mustache', 'backbone', 'text!templates/profile/
 					});
 				});
 			}
-			
+
 			navigator.notification.confirm("Tem certeza que deseja sair?", function(b) {
 				if (b == 1)
 					cb();
 			}, "Sair do Ligoocard");
-			
+
 		}
 	});
 	return ProfileView;

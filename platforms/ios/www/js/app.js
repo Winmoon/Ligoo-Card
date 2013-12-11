@@ -1,21 +1,5 @@
 app = {};
 
-document.addEventListener("deviceready", function(e) {
-	navigator.splashscreen.hide();
-
-	window.alert = navigator.notification.alert;
-
-	FB.init({
-		appId : "183318471871083",
-		nativeInterface : CDV.FB,
-		status : true,
-		cookie : true,
-		xfbml : true,
-		oauth : true
-	});
-
-}, "false");
-
 function checkMandatories(form) {
 
 	var haveMandatories = 0;
@@ -167,13 +151,12 @@ function getCoords(cb) {
 	var success = function(s) {
 		app.userCoord = [s.coords.latitude, s.coords.longitude];
 
-		if (cb)
-			cb();
+		if (_cb)
+			_cb();
 
 	};
 
 	var error = function(e) {
-
 		navigator.notification.confirm("Não consegui pegar sua localização, por favor verifique: \n\n - Se está permitido o aplicativo a usar dados de localização. \n - Se está ativado o serviço de localização", function(b) {
 			if (b == 2)
 				getCoords(_cb);
@@ -196,6 +179,7 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 		new FastClick(document.body);
 
 		Backbone.View.prototype.close = function() {
+			alert("fechar biew");
 			this.remove();
 			this.unbind();
 			this.$el.unbind();
@@ -260,38 +244,53 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 						replace : true
 					});
 					loader('hide');
-				},
-
-				422 : function(error) {
-					var data = JSON.parse(error.responseText);
-
-					if (data.point_type)
-						alert(data.point_type, null, "Erro");
-					else if (data.error)
-						alert(data.error, null, "Erro");
-					else
-						alert("Erro 422", null, "Erro");
-
 				}
+
+				// 422 : function(error) {
+					// var data = JSON.parse(error.responseText);
+// 
+					// if (data.point_type)
+						// alert(data.point_type, null, "Erro");
+					// else if (data.error)
+						// alert(data.error, null, "Erro");
+// 
+				// }
 			}
 		});
 
-		get_cards(function(data) {
-
-			var _data = JSON.parse(data.status);
-
-			if (_data.status == 401)
-				Backbone.Router.prototype.navigate("login", {
-					trigger : true,
-					replace : true
-				});
-			else
-				app.userLoggedIn = true;
-
+		FB.init({
+			appId : "183318471871083",
+			nativeInterface : CDV.FB,
+			status : true,
+			cookie : true,
+			xfbml : true,
+			oauth : true
 		});
 
 		if (localStorage.getItem("userData") != "" || typeof localStorage.getItem("userData") != "undefined")
 			app.userData = JSON.parse(localStorage.getItem("userData"));
+
+		document.addEventListener("deviceready", function(e) {
+
+			// get_cards(function(data) {
+// 
+				// var _data = JSON.parse(data.status);
+// 
+				// if (_data.status == 401)
+					// Backbone.Router.prototype.navigate("login", {
+						// trigger : true,
+						// replace : true
+					// });
+				// else
+					// app.userLoggedIn = true;
+// 
+				navigator.splashscreen.hide();
+// 
+			// });
+
+			window.alert = navigator.notification.alert;
+
+		}, "false");
 
 		Router.initialize();
 

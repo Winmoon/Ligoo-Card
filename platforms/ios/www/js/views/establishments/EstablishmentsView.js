@@ -13,7 +13,11 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 			showAppHeaderFooter(true, true);
 			loader('show');
 			this.$el.html("");
-			this.el.unbind();
+		},
+
+		prepareToDie : function() {
+			this.undelegateEvents();
+			return this;
 		},
 
 		showView : function(id) {
@@ -161,9 +165,8 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 
 				this.percentage = (establishmentsView.model.establishment.totalPoints * 100) / this.points + "%";
 
-				establishmentsView.$el.find("#establishments-show-view .ofertas-item[data-promotion-id=" + this.id + "] .points-to-win").css("width", this.percentage);
-
 				if (parseInt(this.percentage) >= 100) {
+					this.percentage = "100%";
 					havePremiuns = true;
 					this.wonPremiumClass = "won-premium";
 
@@ -171,6 +174,8 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 					establishmentsView.$el.find("#establishments-show-view .ofertas-item[data-promotion-id=" + this.id + "] .points-to-win").addClass(this.wonPremiumClass);
 
 				}
+				
+				establishmentsView.$el.find("#establishments-show-view .ofertas-item[data-promotion-id=" + this.id + "] .points-to-win").css("width", this.percentage);
 			});
 
 			if (havePremiuns)
@@ -178,6 +183,7 @@ define(['jquery', 'underscore', 'backbone', 'mustache', 'text!templates/establis
 		},
 
 		won_coupon_create_coupon : function(d) {
+
 			var id = $(d.currentTarget).data("promotion-id");
 			var el = $(d.currentTarget);
 
