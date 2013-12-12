@@ -54,6 +54,9 @@ define(['jquery', 'underscore', 'mustache', 'backbone', 'text!templates/profile/
 						replace : true
 					});
 				});
+				
+				FB.logout();
+				app.userLoggedIn = false;
 			}
 
 			navigator.notification.confirm("Tem certeza que deseja sair?", function(b) {
