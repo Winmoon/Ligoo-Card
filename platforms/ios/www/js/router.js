@@ -38,7 +38,13 @@ define(['jquery', 'underscore', 'backbone', 'views/login/LoginView', 'views/sign
 
 		app_router.on('route:me', function() {
 
+			if(typeof profileView !="undefined"){
+				profileView.prepareToDie();
+				delete profileView;
+			}
+			
 			profileView = new ProfileView();
+			
 			profileView.render();
 		});
 

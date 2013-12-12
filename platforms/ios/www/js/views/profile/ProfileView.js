@@ -12,6 +12,11 @@ define(['jquery', 'underscore', 'mustache', 'backbone', 'text!templates/profile/
 			this.undelegateEvents();
 			_.bindAll(this);
 		},
+		
+		prepareToDie : function() {
+			this.undelegateEvents();
+			return this;
+		},
 
 		render : function() {
 			this.$headerTitle.html("Meu perfil");
