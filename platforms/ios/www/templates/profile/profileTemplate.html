@@ -25,6 +25,12 @@
 				<input class="radio-shadow-pink" type="radio" name="gender" {{femCheck}} value="F">
 			</span>
 		</div>
+		{{#showPassword}}
+		<font size="1" color="red">Se não quiser mudar a senha deixe em branco</font>
+			<input name="password" rel="mandatory" type="password" placeholder="Senha"/>
+			<input name="password_confirmation" rel="mandatory" type="password" placeholder="Confirmar senha"/>
+			<div class="clearfix"></div>
+		{{/showPassword}}
 		<div class="buttons_group" style="top: 28px;">
 			<img src="./imgs/btn-atualizar.png" class="btn-atualizar-profile" />
 		</div>

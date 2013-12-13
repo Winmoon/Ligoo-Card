@@ -28,6 +28,11 @@ define(['jquery', 'underscore', 'mustache', 'backbone', 'text!templates/profile/
 
 				_this.model.maleCheck = _this.model.gender == "M" ? "checked" : "";
 				_this.model.femCheck = _this.model.gender == "F" ? "checked" : "";
+				
+				_this.model.showPassword = true;
+				
+				if(typeof app.userData.provider !="undefined" && app.userData.provider == "facebook")
+					_this.model.showPassword = false;
 
 				_this.templateOutput = app.loadTemplate("me", profileTemplate)(_this.model);
 				_this.$el.html(_this.templateOutput);

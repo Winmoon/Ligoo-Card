@@ -17,7 +17,7 @@ make_base_auth = function(user, password) {
 	return "Basic " + hash;
 };
 
-signin_with_facebook = function() {
+signin_with_facebook = function(cb) {
 
 	loader("show");
 
@@ -26,7 +26,8 @@ signin_with_facebook = function() {
 
 	FB.login((function(response) {
 
-		if (response.authResponse) {
+		if (!response || response.error) {
+		} else {
 
 			setTimeout(function() {
 				FB.login(null, {
@@ -86,8 +87,7 @@ signin_with_facebook = function() {
 
 			});
 
-		} else
-			loader("hide");
+		}
 
 	}), {
 		scope : "email"
@@ -149,6 +149,12 @@ sign_up = function(form) {
 				});
 
 			}
+		}).fail(function(e) {
+			
+			var _e = JSON.parse(e.responseText);
+			
+			if (e.status == 422)
+				alert("Este email já está em uso");
 		});
 	}
 };
@@ -261,22 +267,33 @@ create_point = function() {
 
 							if ( typeof establishmentsView != "undefined") {
 								establishmentsView.updateBarPremiuns(1);
-								$(".establishment-total-points").text(parseInt($(".establishment-total-points").text()) + 1);
+								if ($.isNumeric(parseInt($(".establishment-total-points").text())))
+									$(".establishment-total-points").text(parseInt($(".establishment-total-points").text()) + 1);
+								else {
+									$(".establishment-total-points").parent().addClass("remove-icon").removeClass("add_card_mycards");
+									$(".establishment-total-points").parent().html('<div class="establishment-total-points">1</div> ponto');
+								}
 							} else
 								openViaExternal(ligooValidator[0]);
 
 							popup(messages.pointAdded);
 
-							if (establishment.share_points > 0) {
+							if ( typeof app.userData.provider != "undefined" && app.userData.provider == "facebook") {
 
-								var nDate = new Date();
-								nDate = nDate.getDay() + "/" + nDate.getMonth() + "/" + nDate.getFullYear() + " - " + nDate.getHours() + ":" + nDate.getMinutes() + ":" + nDate.getSeconds();
+								if (establishment.share_points > 0) {
 
-								navigator.notification.confirm("Compartihe no facebook e ganhe " + establishment.share_points + " ponto(s) a mais", function(d) {
-									if (d == 1)
-										share_point("" + nDate + " - Acabei de ganhar mais " + establishment.share_points + " ponto(s) no " + establishment.name + "", establishment.share_points, establishmentID);
+									var nDate = new Date();
+									nDate = nDate.getDay() + "/" + nDate.getMonth() + "/" + nDate.getFullYear() + " - " + nDate.getHours() + ":" + nDate.getMinutes() + ":" + nDate.getSeconds();
 
-								}, "Ganhe mais pontos!", ["Compartilhar", "Cancelar"]);
+									navigator.notification.confirm("Compartihe no facebook e ganhe " + establishment.share_points + " ponto(s) a mais", function(d) {
+										if (d == 1) {
+											loader("show");
+											Lollipop.close();
+											share_point("" + nDate + " - Acabei de ganhar mais " + establishment.share_points + " ponto(s) no " + establishment.name + "", establishment.share_points, establishmentID);
+										}
+
+									}, "Ganhe mais pontos!", ["Compartilhar", "Cancelar"]);
+								}
 							}
 
 							loader("hide");
@@ -328,22 +345,20 @@ share_point = function(message, points, id) {
 		message : message
 	}, function(response) {
 		if (!response || response.error) {
-			alert('Algum erro ao compartilhar seu ponto no facebook');
-			console.log(response);
+			alert('Algum erro ao compartilhar seu ponto no facebook', null, "Erro ao compartilhar");
+			loader("hide");
 		} else {
 			$.get(url("user/api/" + establishment_id + "/point.json"), {
 				point_type : "share"
 			}, function(data) {
 				alert("OK, seu compartilhamento foi efetuado e você ganhou mais " + point + " ponto(s)", null, "Parabéns!");
-
+				loader("hide");
 				$(".establishment-total-points").text(parseInt($(".establishment-total-points").text()) + point);
-
 				establishmentsView.updateBarPremiuns(point);
-
 			});
-
 		}
 	});
+
 };
 
 get_points = function(establishment, cb) {
@@ -359,7 +374,7 @@ get_cards = function(cb) {
 };
 
 get_establishments = function() {
-	return $.get(url("user/api/establishments.json"), function(data) {
+	$.get(url("user/api/establishments.json"), function(data) {
 		return console.log(data);
 	});
 };

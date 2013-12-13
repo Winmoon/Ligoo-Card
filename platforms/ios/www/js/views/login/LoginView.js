@@ -25,6 +25,11 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/login/loginTemplate.
 			}); 	
 		},
 		
+		prepareToDie : function() {
+			this.undelegateEvents();
+			return this;
+		},
+		
 		go_sign_with_facebook : function(){
 			signin_with_facebook();	
 		},

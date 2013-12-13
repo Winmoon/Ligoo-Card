@@ -17,6 +17,11 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/sign_up/signUpTempla
 			}); 	
 		},
 		
+		prepareToDie : function() {
+			this.undelegateEvents();
+			return this;
+		},
+		
 		sign_up_submit: function(){
 			sign_up("#signup-form"); 	
 		},

@@ -70,7 +70,6 @@ define(['jquery', 'underscore', 'backbone', 'views/login/LoginView', 'views/sign
 
 		app_router.on('route:establishments_list', function(action) {
 
-			
 			if(typeof establishmentsView !="undefined"){
 				establishmentsView.prepareToDie();
 				delete establishmentsView;
@@ -81,13 +80,11 @@ define(['jquery', 'underscore', 'backbone', 'views/login/LoginView', 'views/sign
 		});
 
 		app_router.on('route:news', function() {
-
 			newsView = new NewsView();
 			newsView.render();
 		});
 
 		app_router.on('route:home', function() {
-
 			homeView = new HomeView();
 			homeView.render();
 		});
@@ -100,12 +97,22 @@ define(['jquery', 'underscore', 'backbone', 'views/login/LoginView', 'views/sign
 
 		app_router.on('route:login', function(action) {
 
+			if(typeof loginView !="undefined"){
+				loginView.prepareToDie();
+				delete loginView;
+			}
+			
 			loginView = new LoginView(action);
 			loginView.render();
 		});
 
 		app_router.on('route:sign_in', function() {
 
+			if(typeof signUpView !="undefined"){
+				signUpView.prepareToDie();
+				delete signUpView;
+			}
+			
 			signUpView = new SignUpView();
 			signUpView.render();
 		});
