@@ -1,0 +1,44 @@
+<div class="content" id="mycards-view">
+	{{#noHaveCards}}
+	<div class="arrow_box_white txt-center">
+		<span class="txt-blue"> VOCÊ AINDA NÃO TEM NENHUM CARTÃO ADICIONADO.</span>
+		<br>
+		Explore por novos lugares e adicione cartões a sua conta.
+		<br>
+		<br>
+	</div>
+	<div class="logo">
+		<img src="./imgs/logo.png" />
+	</div>
+	{{/noHaveCards}}
+	<div class="listview">
+		{{#mycards}}
+		<div class="item" data-establishment-id="{{id}}">
+			<div class="icon pull-left" style="background-image: url('{{logo}}')"></div>
+			<div class="description text-shadow-white pull-left">
+				<div class="title">
+					{{name}}
+				</div>
+				<div>
+					Você tem <span class="points">{{pointsEarned}}</span> {{pointsText}}
+				</div>
+			</div>
+		</div>
+		<hr class="separator" />
+		{{/mycards}}
+		{{#myOwnedCards}}
+		<div class="item" data-establishment-id="{{id}}">
+			<div class="icon pull-left" style="background-image: url('{{logo}}')"></div>
+			<div class="description text-shadow-white pull-left">
+				<div class="title">
+					{{name}}
+				</div>
+				<div>
+					Você tem <span class="points">{{pointsEarned}}</span> {{pointsText}}
+				</div>
+			</div>
+		</div>
+		<hr class="separator" />
+		{{/myOwnedCards}}
+	</div>
+</div>
