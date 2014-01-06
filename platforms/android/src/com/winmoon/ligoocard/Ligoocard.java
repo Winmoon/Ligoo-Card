@@ -22,12 +22,15 @@ package com.winmoon.ligoocard;
 import android.os.Bundle;
 import org.apache.cordova.*;
 
+import com.urenwu.phonegap.plugin.barcodescanner.BridgeR;
+
 public class Ligoocard extends CordovaActivity 
 {
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
+    	BridgeR.init(R.class.getPackage().getName());
+    	super.onCreate(savedInstanceState);
         super.init();
         // Set by <content src="index.html" /> in config.xml
         super.loadUrl(Config.getStartUrl());

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    
+    <SurfaceView android:id="@+id/preview_view"
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	android:layout_centerInParent="true"
+    />
+    
+    <com.urenwu.phonegap.plugin.barcodescanner.view.ViewfinderView
+        android:id="@+id/viewfinder_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@android:color/transparent" />
+
+    <ImageButton
+        android:id="@+id/imageButton1"
+        android:layout_width="85dp"
+        android:layout_height="27dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="100dp"
+        android:background="@drawable/cancelar_verde"
+        android:onClick="teste" />
+
+</FrameLayout>
