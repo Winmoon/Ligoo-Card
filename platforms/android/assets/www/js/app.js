@@ -1,4 +1,5 @@
 app = {};
+var facebookConnect;
 
 function checkMandatories(form) {
 
@@ -285,6 +286,7 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 					// app.userLoggedIn = true;
 // 
 				navigator.splashscreen.hide();
+				// facebookConnect = window.plugins.facebookConnect;
 // 
 			// });
 

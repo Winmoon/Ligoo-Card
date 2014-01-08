@@ -20,13 +20,14 @@ make_base_auth = function(user, password) {
 signin_with_facebook = function(cb) {
 
 	loader("show");
-
+	
 	if (FB._userStatus == "unknown" || FB._userStatus == "connected")
 		FB.logout();
 
 	FB.login((function(response) {
 
 		if (!response || response.error) {
+			console.log("response LOGIN",response);
 		} else {
 
 			setTimeout(function() {
@@ -92,6 +93,7 @@ signin_with_facebook = function(cb) {
 	}), {
 		scope : "email"
 	});
+	
 };
 
 sign_in = function(user, pass) {
