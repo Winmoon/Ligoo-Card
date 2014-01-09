@@ -156,18 +156,18 @@ function getCoords(cb) {
 			_cb();
 
 	};
-
+	//Notification.confirm(string, function, string, string) is deprecated.  Use Notification.confirm(string, function, string, array).
 	var error = function(e) {
 		navigator.notification.confirm("Não consegui pegar sua localização, por favor verifique: \n\n - Se está permitido o aplicativo a usar dados de localização. \n - Se está ativado o serviço de localização", function(b) {
 			if (b == 2)
 				getCoords(_cb);
-		}, "Erro", "Ok, Tentar novamente");
+		}, "Erro", ["Ok", "Tentar novamente"]);
 		loader("hide");
 	};
 
 	navigator.geolocation.getCurrentPosition(success, error, {
-		enableHighAccuracy : true,
-		timeout : 10000
+		// enableHighAccuracy : true,
+		// timeout : 10000
 	});
 }
 
@@ -177,10 +177,12 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 	var initialize = function() {
 		// Pass in our Router module and call it's initialize function
 
+		$(".tab-icons a").css("width",$("body").width() / 5 - 20+"px");
+		$(".tab-icons a:eq(2)").css("width",$("body").width() / 5 + 46+"px");
+		
 		new FastClick(document.body);
 
 		Backbone.View.prototype.close = function() {
-			alert("fechar biew");
 			this.remove();
 			this.unbind();
 			this.$el.unbind();

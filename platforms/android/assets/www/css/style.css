@@ -356,10 +356,12 @@ input {
 }
 
 .listview .item {
-	background: url("../imgs/list_itens_bg.png") no-repeat scroll center center /contain transparent;
+	background: url("../imgs/list_itens_bg.png") no-repeat scroll left center transparent;
+	background-size: contain;
+	-webkit-background-size: contain;
 	height: 56px;
 	margin-left: -11px;
-	width: 107%;
+	width: 100%;
 }
 
 .listview .item .icon {
@@ -568,12 +570,18 @@ input {
   width: 100%;
 }
 
-.button {
+/*.button {
     height: auto;
     padding-top: 2px;
     position: relative;
     text-align: center;
     width: 53.33px;
+}*/
+
+.button {
+  height: auto;
+  text-align: center;
+  width: 100%;
 }
 
 
@@ -582,10 +590,18 @@ input {
     vertical-align: middle;
 }
 
-.tab-icons a{
+/*.tab-icons a{
 	color: white;
 	text-shadow: 1px 1px rgb(35,149,148);
 	display: inline-block;
+}*/
+
+.tab-icons a {
+  color: #FFFFFF;
+  display: table-cell;
+  text-shadow: 1px 1px #239594;
+  min-width: 64px;
+  text-decoration: none;
 }
 
 .tab-icons .label {
@@ -595,11 +611,17 @@ input {
 	top: -10px;
 }
 
-.button.btn-large {
+/*.button.btn-large {
   margin-right: 3px;
   top: -5px;
   width: 79px;
   margin-left: 5px;
+}*/
+
+.button.btn-large {
+  padding-left: 3.5px;
+  position: relative;
+  top: -5px;
 }
 
 .button.btn-large > .label{

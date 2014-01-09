@@ -20,80 +20,84 @@ make_base_auth = function(user, password) {
 signin_with_facebook = function(cb) {
 
 	loader("show");
-	
-	if (FB._userStatus == "unknown" || FB._userStatus == "connected")
-		FB.logout();
 
-	FB.login((function(response) {
+	setTimeout(function() {
+		if (FB._userStatus == "unknown" || FB._userStatus == "connected")
+			FB.logout();
 
-		if (!response || response.error) {
-			console.log("response LOGIN",response);
-		} else {
+		FB.login((function(response) {
 
-			setTimeout(function() {
-				FB.login(null, {
-					scope : 'publish_actions'
-				});
-			}, 1000);
+			if (!response || response.error) {
+				console.log("response LOGIN", response);
+			}
+			else if (response.cancelled){}
+			else {
 
-			var login_response = response.authResponse;
-
-			FB.api('/me', {
-				fields : 'birthday, gender'
-			}, function(response) {
-
-				var birthday = response.birthday.substr(3, 2) + "/" + response.birthday.substr(0, 2) + "/" + response.birthday.substr(6, 4);
-
-				var gender = response.gender == "male" ? "M" : "F";
-
-				$.getJSON(url("users/auth/facebook/callback") + "?" + $.param({
-					access_token : login_response.accessToken
-				}), {
-					dataType : "json",
-					crossDomain : true,
-					xhrFields : {
-						withCredentials : true
-					},
-					birth_date : response.birthday.substr(3, 2) + "/" + response.birthday.substr(0, 2) + "/" + response.birthday.substr(6, 4)
-
-				}, function(json) {
-
-					localStorage.setItem("userData", JSON.stringify(json));
-					app.userData = JSON.parse(localStorage.getItem("userData"));
-					app.userLoggedIn = true;
-
-					loader("hide");
-
-					Backbone.Router.prototype.navigate("welcome", {
-						trigger : true,
-						replace : true
+				setTimeout(function() {
+					FB.login(null, {
+						scope : 'publish_actions'
 					});
+				}, 1000);
 
-					$.post(url("user/api/update_profile.json"), {
-						user : {
-							birth_date : birthday,
-							gender : gender
+				var login_response = response.authResponse;
+
+				FB.api('/me', {
+					fields : 'birthday, gender'
+				}, function(response) {
+
+					var birthday = response.birthday.substr(3, 2) + "/" + response.birthday.substr(0, 2) + "/" + response.birthday.substr(6, 4);
+
+					var gender = response.gender == "male" ? "M" : "F";
+
+					$.getJSON(url("users/auth/facebook/callback") + "?" + $.param({
+						access_token : login_response.accessToken
+					}), {
+						dataType : "json",
+						crossDomain : true,
+						xhrFields : {
+							withCredentials : true
 						},
-					}, function(data) {
-						if (data.id)
-							localStorage.setItem("userData", JSON.stringify(data));
+						birth_date : response.birthday.substr(3, 2) + "/" + response.birthday.substr(0, 2) + "/" + response.birthday.substr(6, 4)
+
+					}, function(json) {
+
+						localStorage.setItem("userData", JSON.stringify(json));
+						app.userData = JSON.parse(localStorage.getItem("userData"));
+						app.userLoggedIn = true;
+
+						loader("hide");
+
+						Backbone.Router.prototype.navigate("welcome", {
+							trigger : true,
+							replace : true
+						});
+
+						$.post(url("user/api/update_profile.json"), {
+							user : {
+								birth_date : birthday,
+								gender : gender
+							},
+						}, function(data) {
+							if (data.id)
+								localStorage.setItem("userData", JSON.stringify(data));
+
+						}).fail(function() {
+							loader("hide");
+						});
 
 					}).fail(function() {
 						loader("hide");
 					});
 
-				}).fail(function() {
-					loader("hide");
 				});
 
-			});
+			}
 
-		}
+		}), {
+			scope : "email,user_birthday"
+		});
+	}, 2000);
 
-	}), {
-		scope : "email"
-	});
-	
 };
 
 sign_in = function(user, pass) {
@@ -152,9 +156,9 @@ sign_up = function(form) {
 
 			}
 		}).fail(function(e) {
-			
+
 			var _e = JSON.parse(e.responseText);
-			
+
 			if (e.status == 422)
 				alert("Este email já está em uso");
 		});

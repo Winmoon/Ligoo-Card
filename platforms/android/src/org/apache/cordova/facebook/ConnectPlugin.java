@@ -293,7 +293,6 @@ public class ConnectPlugin extends CordovaPlugin {
                         JSONObject o = new JSONObject(fba.facebook.request("me"));
                         fba.userId = o.getString("id");
                         fba.callbackContext.success(getResponse());
-                        Log.d(TAG, "USER ID "+fba.userId);
                     } catch (MalformedURLException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
