@@ -29,13 +29,18 @@ signin_with_facebook = function(cb) {
 
 			if (!response || response.error) {
 				console.log("response LOGIN", response);
-			}
-			else if (response.cancelled){}
-			else {
+			} else if (response.cancelled) {
+			} else {
 
 				setTimeout(function() {
-					FB.login(null, {
-						scope : 'publish_actions'
+
+					FB.api('/me/permissions', function(r) {
+						
+						if(!r.data[0].publish_stream == 1)
+						FB.login(null, {
+							scope : 'publish_actions'
+						});
+
 					});
 				}, 1000);
 

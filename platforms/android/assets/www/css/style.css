@@ -45,7 +45,9 @@ input, textarea, select {
 
 
 .content {
-	background: url("../imgs/bg.png") no-repeat scroll center center /cover transparent;
+	background: url("../imgs/bg.png") no-repeat scroll center center transparent;
+	background-size: cover;
+	-webkit-background-size: cover;
 	bottom: 0;
 	color: #717478;
 	left: 0;
