@@ -242,14 +242,11 @@ create_point = function() {
 
 	barcodeScanner.scan(function(r) {
 
-		// var r = {
-		// text : "1,ligoocard",
-		// cancelled : false
-		// };
+		var ligooValidator;
 
 		if (!r.cancelled) {
 
-			var ligooValidator = r.text.split(",");
+			ligooValidator = r.text.split(",");
 
 			if (ligooValidator[1] != "" && ligooValidator[1] != "ligoocard") {
 				loader("hide");

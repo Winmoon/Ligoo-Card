@@ -37,7 +37,7 @@ public class UrenwuCaptureActivity extends Activity implements Callback {
 	private InactivityTimer inactivityTimer;
 	private MediaPlayer mediaPlayer;
 	private boolean playBeep;
-	private static final float BEEP_VOLUME = 0.20f;
+	private static final float BEEP_VOLUME = 0.10f;
 	private boolean vibrate;
 
 	/** Called when the activity is first created. */
