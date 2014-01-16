@@ -1,4 +1,5 @@
 app = {};
+var pushNotification;
 var facebookConnect;
 
 function checkMandatories(form) {
@@ -177,9 +178,9 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 	var initialize = function() {
 		// Pass in our Router module and call it's initialize function
 
-		$(".tab-icons a").css("width",$("body").width() / 5 - 20+"px");
-		$(".tab-icons a:eq(2)").css("width",$("body").width() / 5 + 46+"px");
-		
+		$(".tab-icons a").css("width", $("body").width() / 5 - 20 + "px");
+		$(".tab-icons a:eq(2)").css("width", $("body").width() / 5 + 46 + "px");
+
 		new FastClick(document.body);
 
 		Backbone.View.prototype.close = function() {
@@ -248,15 +249,14 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 					});
 					loader('hide');
 				}
-
 				// 422 : function(error) {
-					// var data = JSON.parse(error.responseText);
-// 
-					// if (data.point_type)
-						// alert(data.point_type, null, "Erro");
-					// else if (data.error)
-						// alert(data.error, null, "Erro");
-// 
+				// var data = JSON.parse(error.responseText);
+				//
+				// if (data.point_type)
+				// alert(data.point_type, null, "Erro");
+				// else if (data.error)
+				// alert(data.error, null, "Erro");
+				//
 				// }
 			}
 		});
@@ -272,24 +272,116 @@ define(['jquery', 'fastclick', 'underscore', 'backbone', 'router', 'mustache' //
 
 		if (localStorage.getItem("userData") != "" || typeof localStorage.getItem("userData") != "undefined")
 			app.userData = JSON.parse(localStorage.getItem("userData"));
+			
+			
+		onNotificationGCM = function(e) {
+				
+				alert("notify");
+				console.log(e);
+				$("#app-status-ul").append('<li>EVENT -> RECEIVED:' + e.event + '</li>');
+
+				switch( e.event ) {
+					case 'registered':
+						if (e.regid.length > 0) {
+							$("#app-status-ul").append('<li>REGISTERED -> REGID:' + e.regid + "</li>");
+							// Your GCM push server needs to know the regID before it can push to this device
+							// here is where you might want to send it the regID for later use.
+							console.log("regID = " + e.regid);
+						}
+						break;
+
+					case 'message':
+						// if this flag is set, this notification happened while we were in the foreground.
+						// you might want to play a sound to get the user's attention, throw up a dialog, etc.
+						if (e.foreground) {
+							$("#app-status-ul").append('<li>--INLINE NOTIFICATION--' + '</li>');
+
+							// if the notification contains a soundname, play it.
+							var my_media = new Media("/android_asset/www/" + e.soundname);
+							my_media.play();
+						} else {// otherwise we were launched because the user touched a notification in the notification tray.
+							if (e.coldstart)
+								$("#app-status-ul").append('<li>--COLDSTART NOTIFICATION--' + '</li>');
+							else
+								$("#app-status-ul").append('<li>--BACKGROUND NOTIFICATION--' + '</li>');
+						}
+
+						$("#app-status-ul").append('<li>MESSAGE -> MSG: ' + e.payload.message + '</li>');
+						$("#app-status-ul").append('<li>MESSAGE -> MSGCNT: ' + e.payload.msgcnt + '</li>');
+						break;
+
+					case 'error':
+						$("#app-status-ul").append('<li>ERROR -> MSG:' + e.msg + '</li>');
+						break;
+
+					default:
+						$("#app-status-ul").append('<li>EVENT -> Unknown, an event was received and we do not know what it is</li>');
+						break;
+				}
+			}
+
+			tokenHandler = function(result) {
+				$("#app-status-ul").append('<li>token: ' + result + '</li>');
+				// Your iOS push server needs to know the token before it can push to this device
+				// here is where you might want to send it the token for later use.
+			}
+
+			successHandler = function(result) {
+				$("#app-status-ul").append('<li>success:' + result + '</li>');
+			}
+
+			errorHandler= function(error) {
+				$("#app-status-ul").append('<li>error:' + error + '</li>');
+			}
+			
 
 		document.addEventListener("deviceready", function(e) {
 
 			// get_cards(function(data) {
-// 
-				// var _data = JSON.parse(data.status);
-// 
-				// if (_data.status == 401)
-					// Backbone.Router.prototype.navigate("login", {
-						// trigger : true,
-						// replace : true
-					// });
-				// else
-					// app.userLoggedIn = true;
-// 
-				navigator.splashscreen.hide();
-				// facebookConnect = window.plugins.facebookConnect;
-// 
+			//
+			// var _data = JSON.parse(data.status);
+			//
+			// if (_data.status == 401)
+			// Backbone.Router.prototype.navigate("login", {
+			// trigger : true,
+			// replace : true
+			// });
+			// else
+			// app.userLoggedIn = true;
+			//
+			navigator.splashscreen.hide();
+
+			console.log("Device info");
+			console.log(device.uuid);
+			
+			// handle GCM notifications for Android
+			try {
+				pushNotification = window.plugins.pushNotification;
+				if (device.platform == 'android' || device.platform == 'Android') {
+					$("#app-status-ul").append('<li>registering android</li>');
+					pushNotification.register(successHandler, errorHandler, {
+						"senderID" : "299520347793",
+						"ecb" : "onNotificationGCM"
+					});
+					// required!
+				} else {
+					$("#app-status-ul").append('<li>registering iOS</li>');
+					pushNotification.register(tokenHandler, errorHandler, {
+						"badge" : "true",
+						"sound" : "true",
+						"alert" : "true",
+						"ecb" : "onNotificationAPN"
+					});
+					// required!
+				}
+			} catch(err) {
+				txt = "There was an error on this page.\n\n";
+				txt += "Error description: " + err.message + "\n\n";
+				alert(txt);
+			}
+
+			// facebookConnect = window.plugins.facebookConnect;
+			//
 			// });
 
 			window.alert = navigator.notification.alert;
