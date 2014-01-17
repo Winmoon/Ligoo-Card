@@ -35,6 +35,9 @@
 		5AA0E66F1729F460000DC89A /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AA0E66E1729F460000DC89A /* ImageIO.framework */; };
 		5B1594DD16A7569C00FEF299 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1594DC16A7569C00FEF299 /* AssetsLibrary.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		7232C8ED1847FEA300E967D7 /* cancelar_verde.png in Resources */ = {isa = PBXBuildFile; fileRef = 7232C8EB1847FE9E00E967D7 /* cancelar_verde.png */; };
+		72420AE21889992F00A04364 /* AppDelegate+notification.m in Sources */ = {isa = PBXBuildFile; fileRef = 72420ADF1889992F00A04364 /* AppDelegate+notification.m */; };
+		72420AE31889992F00A04364 /* PushPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 72420AE11889992F00A04364 /* PushPlugin.m */; };
+		72420AE91889AAFB00A04364 /* CDVParsePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 72420AE81889AAFB00A04364 /* CDVParsePlugin.m */; };
 		724EE60A183A809A00C8ECE2 /* scannerOverlay.xib in Resources */ = {isa = PBXBuildFile; fileRef = 724EE606183A809A00C8ECE2 /* scannerOverlay.xib */; };
 		724EE60D183A811F00C8ECE2 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 724EE60C183A811F00C8ECE2 /* CoreVideo.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		724EE60F183A813700C8ECE2 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 724EE60E183A813700C8ECE2 /* libiconv.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -104,6 +107,12 @@
 		5AEE5B34173C68D80009041E /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		5B1594DC16A7569C00FEF299 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		7232C8EB1847FE9E00E967D7 /* cancelar_verde.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cancelar_verde.png; path = ../../../../../../../../ligoocard/platforms/ios/LigooCard/Plugins/cancelar_verde.png; sourceTree = BUILT_PRODUCTS_DIR; };
+		72420ADE1889992F00A04364 /* AppDelegate+notification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "AppDelegate+notification.h"; path = "../../../../../phonegap-plugins/Android/PushPlugin-master/src/ios/AppDelegate+notification.h"; sourceTree = "<group>"; };
+		72420ADF1889992F00A04364 /* AppDelegate+notification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "AppDelegate+notification.m"; path = "../../../../../phonegap-plugins/Android/PushPlugin-master/src/ios/AppDelegate+notification.m"; sourceTree = "<group>"; };
+		72420AE01889992F00A04364 /* PushPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PushPlugin.h; path = "../../../../../phonegap-plugins/Android/PushPlugin-master/src/ios/PushPlugin.h"; sourceTree = "<group>"; };
+		72420AE11889992F00A04364 /* PushPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PushPlugin.m; path = "../../../../../phonegap-plugins/Android/PushPlugin-master/src/ios/PushPlugin.m"; sourceTree = "<group>"; };
+		72420AE71889AAFB00A04364 /* CDVParsePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDVParsePlugin.h; path = "../../../../../phonegap-plugins/phonegap-parse-plugin-master/src/ios/CDVParsePlugin.h"; sourceTree = "<group>"; };
+		72420AE81889AAFB00A04364 /* CDVParsePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDVParsePlugin.m; path = "../../../../../phonegap-plugins/phonegap-parse-plugin-master/src/ios/CDVParsePlugin.m"; sourceTree = "<group>"; };
 		724EE605183A809A00C8ECE2 /* CDVBarcodeScanner.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CDVBarcodeScanner.mm; sourceTree = "<group>"; };
 		724EE606183A809A00C8ECE2 /* scannerOverlay.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = scannerOverlay.xib; sourceTree = "<group>"; };
 		724EE607183A809A00C8ECE2 /* zxing-all-in-one.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "zxing-all-in-one.cpp"; sourceTree = "<group>"; };
@@ -425,6 +434,12 @@
 		72DBA144183505E70031BBF6 /* ios */ = {
 			isa = PBXGroup;
 			children = (
+				72420AE71889AAFB00A04364 /* CDVParsePlugin.h */,
+				72420AE81889AAFB00A04364 /* CDVParsePlugin.m */,
+				72420ADE1889992F00A04364 /* AppDelegate+notification.h */,
+				72420ADF1889992F00A04364 /* AppDelegate+notification.m */,
+				72420AE01889992F00A04364 /* PushPlugin.h */,
+				72420AE11889992F00A04364 /* PushPlugin.m */,
 				7232C8EB1847FE9E00E967D7 /* cancelar_verde.png */,
 				724EE605183A809A00C8ECE2 /* CDVBarcodeScanner.mm */,
 				724EE606183A809A00C8ECE2 /* scannerOverlay.xib */,
@@ -555,8 +570,11 @@
 			files = (
 				7287926918578AD2009BFDCE /* zxing-all-in-one.h in Sources */,
 				7287926718578621009BFDCE /* CDVBarcodeScanner.mm in Sources */,
+				72420AE91889AAFB00A04364 /* CDVParsePlugin.m in Sources */,
 				7287926818578621009BFDCE /* zxing-all-in-one.cpp in Sources */,
+				72420AE21889992F00A04364 /* AppDelegate+notification.m in Sources */,
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
+				72420AE31889992F00A04364 /* PushPlugin.m in Sources */,
 				726963BE183534D4009DD817 /* FacebookConnectPlugin.m in Sources */,
 				1D3623260D0F684500981E51 /* AppDelegate.m in Sources */,
 				302D95F114D2391D003F00A1 /* MainViewController.m in Sources */,
@@ -623,6 +641,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/winmoon3/Documents/FacebookSDK,
+					"/Users/winmoon3/phonegap-plugins/phonegap-parse-plugin-master/src/ios/Frameworks",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -654,6 +673,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/winmoon3/Documents/FacebookSDK,
+					"/Users/winmoon3/phonegap-plugins/phonegap-parse-plugin-master/src/ios/Frameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LigooCard/LigooCard-Prefix.pch";

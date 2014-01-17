@@ -74,6 +74,9 @@
     <plugins>
         <plugin name="org.apache.cordova.facebook.Connect" value="FacebookConnectPlugin" />
     </plugins>
+    <feature name="PushPlugin">
+        <param name="ios-package" value="PushPlugin" />
+    </feature>
     <access origin="*" />
     <preference name="KeyboardDisplayRequiresUserAction" value="true" />
     <preference name="SuppressesIncrementalRendering" value="false" />
